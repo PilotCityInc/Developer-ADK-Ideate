@@ -3,7 +3,9 @@
     <div class="module-outcomes__container">
       <!-- <v-divider class="presets__divider"></v-divider> -->
       <div class="presets__section-title">Activity Presets</div>
-      <div class="presets__nopresets">No tweaking necessary</div>
+      <!-- <div class="presets__nopresets">No tweaking necessary</div> -->
+      <span class="presets__question-title">Set maximum number of characters (280 default)</span>
+      <v-select outlined label="Maximum Characters"></v-select>
       <v-divider class="presets__divider"></v-divider>
       <div class="presets__section-title">Instruction Presets</div>
       <Instruct v-model="setupInstructions" />
@@ -105,6 +107,13 @@ export default {
 
 <style lang="scss">
 .presets {
+  &__question-title {
+    font-family: Raleway;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 30px;
+    // margin-top: 25px;
+  }
   &__reflection-buttons {
     margin-right: 10px;
     margin-top: 10px;
