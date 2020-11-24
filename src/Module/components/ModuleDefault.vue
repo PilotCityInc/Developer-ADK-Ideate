@@ -33,8 +33,69 @@
         </v-expansion-panel>
       </v-expansion-panels>
     </div>
-    <div>
+    <v-progress-linear
+      class="module-default__collapse-divider"
+      color="#dedede"
+      height="2"
+      value="100"
+      buffer-value="100"
+      stream
+    />
+    <div class="module-edit__container">
+      <div class="module-default__row mb-10">
+        <v-menu open-on-hover offset-y>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn v-bind="attrs" small dark color="green" depressed v-on="on"
+              ><v-icon left>mdi-form-select</v-icon>Final Draft</v-btn
+            >
+          </template>
+          <v-card class="module__menu">
+            <v-btn
+              small
+              color="white"
+              class="module__chat-menu-button v-btn__content"
+              tile
+              depressed
+            >
+              <v-icon left color="#404142">mdi-form-select</v-icon>4th Draft</v-btn
+            >
+            <v-divider></v-divider>
+            <v-btn
+              small
+              color="white"
+              class="module__chat-menu-button v-btn__content"
+              tile
+              depressed
+            >
+              <v-icon left color="#404142">mdi-form-select</v-icon>3rd Draft</v-btn
+            >
+            <v-divider></v-divider>
+            <v-btn
+              small
+              color="white"
+              class="module__chat-menu-button v-btn__content"
+              tile
+              depressed
+            >
+              <v-icon left color="#404142">mdi-form-select</v-icon>2nd Draft</v-btn
+            >
+
+            <v-divider></v-divider>
+            <v-btn
+              small
+              color="white"
+              class="module__chat-menu-button v-btn__content"
+              tile
+              depressed
+            >
+              <v-icon left color="#404142">mdi-form-select</v-icon>1st Draft</v-btn
+            >
+          </v-card>
+        </v-menu>
+      </div>
       <v-textarea
+        placeholder="What 'hair on fire' problem or opportunity are you solving for?"
+        prepend-inner-icon="mdi-fire"
         class="module-default__textarea"
         outlined
         label="Problem or Opportunity"
@@ -42,6 +103,8 @@
       <br />
       <br />
       <v-textarea
+        placeholder="What bright idea do you have as a solution?"
+        prepend-inner-icon="mdi-head-snowflake"
         class="module-default__textarea"
         outlined
         label="Solution or Product"
@@ -49,28 +112,37 @@
       <br />
       <br />
       <v-textarea
+        placeholder="What unique value does your solution deliver?"
+        prepend-inner-icon="mdi-lightning-bolt"
         class="module-default__textarea"
         outlined
         label="Innovation or Unique Value"
       ></v-textarea>
       <br />
       <br />
-      <v-textarea class="module-default__textarea" outlined label="User or Customer"></v-textarea>
+      <v-textarea
+        placeholder="Identify and describe the user and customer of the solution"
+        prepend-inner-icon="mdi-account-group"
+        class="module-default__textarea"
+        outlined
+        label="User or Customer"
+      ></v-textarea>
       <br />
       <br />
       <div class="module-default__row">
-        <div><v-btn x-large outlined depressed>Save Version</v-btn></div>
-        <div><v-btn x-large dark depressed>Finish</v-btn></div>
-      </div>
-      <br />
-      <br />
-      <div class="module-default__row">
-        <div><v-btn small disabled depressed>Current Version</v-btn></div>
+        <div><v-btn x-large outlined depressed>Save Draft</v-btn></div>
+        <div class="ml-auto">
+          <v-btn x-large color="green" dark depressed>Make Final Draft</v-btn>
+        </div>
+        <!-- <div><v-btn small disabled depressed>Current Version</v-btn></div>
         <div><v-btn small outlined depressed>Version 4</v-btn></div>
         <div><v-btn small outlined depressed>Version 3</v-btn></div>
         <div><v-btn small outlined depressed>Version 2</v-btn></div>
-        <div><v-btn small outlined depressed>Version 1</v-btn></div>
+        <div><v-btn small outlined depressed>Version 1</v-btn></div> -->
       </div>
+      <!-- ENTER CONTENT HERE -->
+      <!-- DESIGN YOUR ACTIVITY HERE / COMMENT OUT WHEN YOU'VE STARTED DESIGNING -->
+      <!-- <div class="module-default__none">Design your activity here</div> -->
     </div>
   </v-container>
 </template>
@@ -108,6 +180,18 @@ export default {
   &__textarea {
     // width: 100%;
   }
+  &__none {
+    border-radius: 5px;
+    // border: 1px solid #dedede;
+    height: 100px;
+    text-align: center;
+    background-color: #dedede;
+    font-weight: 700;
+    color: #ffffff;
+    font-size: 18px;
+    padding-top: 35px;
+  }
+
   &__collapse-divider {
     margin-top: 15px;
     margin-bottom: 75px;
