@@ -4,6 +4,7 @@ networks:
     driver: bridge
 services:
   ideate: #in container-based development
+    image: pilotcity/boiler
     container_name: ideate
     build: 
       context: .
