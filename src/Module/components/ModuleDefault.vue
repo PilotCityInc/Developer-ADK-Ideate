@@ -1,154 +1,175 @@
 <template>
-  <v-container class="module-default__container">
-    <div class="module-default__instructions">
-      <v-expansion-panels v-model="showInstructions" class="module-default__instructions" flat>
-        <v-expansion-panel>
-          <v-expansion-panel-header
-            v-show="showInstructions"
-            hide-actions
-            class="pa-0"
-            @click="showInstructions = true"
-          >
-            <template v-slot="{ open }">
-              <v-scroll-y-transition hide-on-leave>
-                <div v-if="!open" class="d-flex flex-column justify-center">
-                  <v-icon color="grey lighten-2" class="d-flex justify-center">
-                    mdi-chevron-down
-                  </v-icon>
-                  <div color="grey lighten-2" class="module-default__collapse-title">
-                    INSTRUCTIONS
+  <ValidationObserver v-slot="{ invalid }" slim>
+    <v-container class="module-default__container">
+      <div class="module-default__instructions">
+        <v-expansion-panels v-model="showInstructions" class="module-default__instructions" flat>
+          <v-expansion-panel>
+            <v-expansion-panel-header
+              v-show="showInstructions"
+              hide-actions
+              class="pa-0"
+              @click="showInstructions = true"
+            >
+              <template v-slot="{ open }">
+                <v-scroll-y-transition hide-on-leave>
+                  <div v-if="!open" class="d-flex flex-column justify-center">
+                    <v-icon color="grey lighten-2" class="d-flex justify-center">
+                      mdi-chevron-down
+                    </v-icon>
+                    <div color="grey lighten-2" class="module-default__collapse-title">
+                      INSTRUCTIONS
+                    </div>
                   </div>
-                </div>
-              </v-scroll-y-transition>
-            </template>
-          </v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <Instruct readonly />
-            <div @click="showInstructions = true">
-              <div class="module-default__collapse-title">CLOSE</div>
-              <!-- <div class="hr"/> OPTIONAL -->
-              <v-icon color="grey lighten-2" class="d-flex justify-center"> mdi-chevron-up </v-icon>
-            </div>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-      </v-expansion-panels>
-    </div>
-    <v-progress-linear
-      class="module-default__collapse-divider"
-      color="#dedede"
-      height="2"
-      value="100"
-      buffer-value="100"
-      stream
-    />
-    <div class="module-edit__container">
-      <div class="module-default__row mb-10">
-        <v-menu open-on-hover offset-y>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn v-bind="attrs" small dark color="green" depressed v-on="on"
-              ><v-icon left>mdi-form-select</v-icon>Final Draft</v-btn
-            >
-          </template>
-          <v-card class="module__menu">
-            <v-btn
-              small
-              color="white"
-              class="module__chat-menu-button v-btn__content"
-              tile
-              depressed
-            >
-              <v-icon left color="#404142">mdi-form-select</v-icon>4th Draft</v-btn
-            >
-            <v-divider></v-divider>
-            <v-btn
-              small
-              color="white"
-              class="module__chat-menu-button v-btn__content"
-              tile
-              depressed
-            >
-              <v-icon left color="#404142">mdi-form-select</v-icon>3rd Draft</v-btn
-            >
-            <v-divider></v-divider>
-            <v-btn
-              small
-              color="white"
-              class="module__chat-menu-button v-btn__content"
-              tile
-              depressed
-            >
-              <v-icon left color="#404142">mdi-form-select</v-icon>2nd Draft</v-btn
-            >
-
-            <v-divider></v-divider>
-            <v-btn
-              small
-              color="white"
-              class="module__chat-menu-button v-btn__content"
-              tile
-              depressed
-            >
-              <v-icon left color="#404142">mdi-form-select</v-icon>1st Draft</v-btn
-            >
-          </v-card>
-        </v-menu>
+                </v-scroll-y-transition>
+              </template>
+            </v-expansion-panel-header>
+            <v-expansion-panel-content>
+              <Instruct readonly />
+              <div @click="showInstructions = true">
+                <div class="module-default__collapse-title">CLOSE</div>
+                <!-- <div class="hr"/> OPTIONAL -->
+                <v-icon color="grey lighten-2" class="d-flex justify-center">
+                  mdi-chevron-up
+                </v-icon>
+              </div>
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+        </v-expansion-panels>
       </div>
-      <v-textarea
-        placeholder="What 'hair on fire' problem or opportunity are you solving for?"
-        prepend-inner-icon="mdi-fire"
-        class="module-default__textarea"
-        outlined
-        label="Problem or Opportunity"
-      ></v-textarea>
-      <br />
-      <br />
-      <v-textarea
-        placeholder="What bright idea do you have as a solution?"
-        prepend-inner-icon="mdi-head-snowflake"
-        class="module-default__textarea"
-        outlined
-        label="Solution or Product"
-      ></v-textarea>
-      <br />
-      <br />
-      <v-textarea
-        placeholder="What unique value does your solution deliver?"
-        prepend-inner-icon="mdi-lightning-bolt"
-        class="module-default__textarea"
-        outlined
-        label="Innovation or Unique Value"
-      ></v-textarea>
-      <br />
-      <br />
-      <v-textarea
-        placeholder="Identify and describe the user and customer of the solution"
-        prepend-inner-icon="mdi-account-group"
-        class="module-default__textarea"
-        outlined
-        label="User or Customer"
-      ></v-textarea>
-      <br />
-      <br />
-      <div class="module-default__row">
-        <div><v-btn x-large outlined depressed>Save Draft</v-btn></div>
-        <div class="ml-auto">
-          <v-btn x-large color="green" dark depressed>Make Final Draft</v-btn>
+      <v-progress-linear
+        class="module-default__collapse-divider"
+        color="#dedede"
+        height="2"
+        value="100"
+        buffer-value="100"
+        stream
+      />
+      <div class="module-edit__container">
+        <div class="module-default__row mb-10">
+          <v-menu open-on-hover offset-y>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn v-bind="attrs" small dark color="green" depressed v-on="on"
+                ><v-icon left>mdi-form-select</v-icon>Final Draft</v-btn
+              >
+            </template>
+            <v-card class="module__menu">
+              <v-btn
+                small
+                color="white"
+                class="module__chat-menu-button v-btn__content"
+                tile
+                depressed
+              >
+                <v-icon left color="#404142">mdi-form-select</v-icon>4th Draft</v-btn
+              >
+              <v-divider></v-divider>
+              <v-btn
+                small
+                color="white"
+                class="module__chat-menu-button v-btn__content"
+                tile
+                depressed
+              >
+                <v-icon left color="#404142">mdi-form-select</v-icon>3rd Draft</v-btn
+              >
+              <v-divider></v-divider>
+              <v-btn
+                small
+                color="white"
+                class="module__chat-menu-button v-btn__content"
+                tile
+                depressed
+              >
+                <v-icon left color="#404142">mdi-form-select</v-icon>2nd Draft</v-btn
+              >
+
+              <v-divider></v-divider>
+              <v-btn
+                small
+                color="white"
+                class="module__chat-menu-button v-btn__content"
+                tile
+                depressed
+              >
+                <v-icon left color="#404142">mdi-form-select</v-icon>1st Draft</v-btn
+              >
+            </v-card>
+          </v-menu>
         </div>
-        <!-- <div><v-btn small disabled depressed>Current Version</v-btn></div>
+        <validation-provider v-slot="{ errors }" slim rules="max:280">
+          <v-textarea
+            v-model="problem"
+            :error-messages="errors"
+            placeholder="What 'hair on fire' problem or opportunity are you solving for?"
+            prepend-inner-icon="mdi-fire"
+            class="module-default__textarea"
+            outlined
+            label="Problem or Opportunity"
+          ></v-textarea>
+        </validation-provider>
+
+        <br />
+        <br />
+        <validation-provider v-slot="{ errors }" slim rules="max:280">
+          <v-textarea
+            v-model="solution"
+            :error-messages="errors"
+            placeholder="What bright idea do you have as a solution?"
+            prepend-inner-icon="mdi-head-snowflake"
+            class="module-default__textarea"
+            outlined
+            label="Solution or Product"
+          ></v-textarea>
+        </validation-provider>
+        <br />
+        <br />
+        <validation-provider v-slot="{ errors }" slim rules="max:280">
+          <v-textarea
+            v-model="innovation"
+            :error-messages="errors"
+            placeholder="What unique value does your solution deliver?"
+            prepend-inner-icon="mdi-lightning-bolt"
+            class="module-default__textarea"
+            outlined
+            label="Innovation or Unique Value"
+          ></v-textarea>
+        </validation-provider>
+        <br />
+        <br />
+        <validation-provider v-slot="{ errors }" slim rules="max:280">
+          <v-textarea
+            v-model="user"
+            :error-messages="errors"
+            placeholder="Identify and describe the user and customer of the solution"
+            prepend-inner-icon="mdi-account-group"
+            class="module-default__textarea"
+            outlined
+            label="User or Customer"
+          ></v-textarea>
+        </validation-provider>
+        <br />
+        <br />
+        <div class="module-default__row">
+          <div><v-btn x-large outlined depressed>Save Draft</v-btn></div>
+          <div class="ml-auto">
+            <v-btn :disabled="invalid" x-large color="green" dark depressed>Make Final Draft</v-btn>
+          </div>
+          <!-- <div><v-btn small disabled depressed>Current Version</v-btn></div>
         <div><v-btn small outlined depressed>Version 4</v-btn></div>
         <div><v-btn small outlined depressed>Version 3</v-btn></div>
         <div><v-btn small outlined depressed>Version 2</v-btn></div>
         <div><v-btn small outlined depressed>Version 1</v-btn></div> -->
+        </div>
+        <!-- ENTER CONTENT HERE -->
+        <!-- DESIGN YOUR ACTIVITY HERE / COMMENT OUT WHEN YOU'VE STARTED DESIGNING -->
+        <!-- <div class="module-default__none">Design your activity here</div> -->
       </div>
-      <!-- ENTER CONTENT HERE -->
-      <!-- DESIGN YOUR ACTIVITY HERE / COMMENT OUT WHEN YOU'VE STARTED DESIGNING -->
-      <!-- <div class="module-default__none">Design your activity here</div> -->
-    </div>
-  </v-container>
+    </v-container>
+  </ValidationObserver>
 </template>
 
 <script lang="ts">
-import { ref } from '@vue/composition-api';
+import { ref, reactive, toRefs } from '@vue/composition-api';
 import Instruct from './ModuleInstruct.vue';
 
 export default {
@@ -157,7 +178,14 @@ export default {
     Instruct
   },
   apollo: {},
-  data() {
+  setup() {
+    const questionAns = reactive({
+      problem: '',
+      solution: '',
+      innovation: '',
+      user: ''
+    });
+
     const setupInstructions = ref({
       description: '',
       instructions: ['', '', '']
@@ -165,7 +193,8 @@ export default {
     const showInstructions = ref(true);
     return {
       setupInstructions,
-      showInstructions
+      showInstructions,
+      ...toRefs(questionAns)
     };
   }
 };
