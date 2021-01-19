@@ -1,8 +1,8 @@
 <template>
   <ValidationObserver v-slot="{ invalid }" slim>
-    <v-container class="module-default__container">
-      <div class="module-default__instructions">
-        <v-expansion-panels v-model="showInstructions" class="module-default__instructions" flat>
+    <v-container>
+      <div>
+        <v-expansion-panels v-model="showInstructions" flat>
           <v-expansion-panel>
             <v-expansion-panel-header
               v-show="showInstructions"
@@ -44,7 +44,7 @@
         buffer-value="100"
         stream
       />
-      <div class="module-edit__container">
+      <div>
         <div class="module-default__row mb-10">
           <v-menu open-on-hover offset-y>
             <template v-slot:activator="{ on, attrs }">
@@ -169,35 +169,47 @@
 </template>
 
 <script lang="ts">
-import { ref, reactive, toRefs } from '@vue/composition-api';
+import { defineComponent } from '@vue/composition-api';
 import Instruct from './ModuleInstruct.vue';
 
-export default {
+export default defineComponent({
   name: 'ModuleDefault',
   components: {
     Instruct
   },
-  apollo: {},
-  setup() {
-    const questionAns = reactive({
+  data() {
+    return {
       problem: '',
       solution: '',
       innovation: '',
-      user: ''
-    });
-
-    const setupInstructions = ref({
-      description: '',
-      instructions: ['', '', '']
-    });
-    const showInstructions = ref(true);
-    return {
-      setupInstructions,
-      showInstructions,
-      ...toRefs(questionAns)
+      user: '',
+      setupInstructions: {
+        description: '',
+        instructions: ['', '', '']
+      },
+      showInstructions: 'true'
     };
   }
-};
+  // setup() {
+  //   const questionAns = reactive({
+  //     problem: '',
+  //     solution: '',
+  //     innovation: '',
+  //     user: ''
+  //   });
+
+  //   const setupInstructions = ref({
+  //     description: '',
+  //     instructions: ['', '', '']
+  //   });
+  //   const showInstructions = ref(true);
+  //   return {
+  //     setupInstructions,
+  //     showInstructions,
+  //     ...toRefs(questionAns)
+  //   };
+  // }
+});
 </script>
 
 <style lang="scss">
@@ -206,7 +218,8 @@ export default {
     flex-direction: row;
     display: flex;
   }
-  &__textarea {
+  &__check {
+    margin-right: 35px;
     // width: 100%;
   }
   &__none {

@@ -7,7 +7,7 @@
         <!-- <div class="presets__nopresets">No tweaking necessary</div> -->
         <span class="presets__question-title">Set maximum number of characters (280 default)</span>
 
-        <validation-provider v-slot="{ errors }" slim rules="numeric">
+        <validation-provider v-slot="{ errors }" slim rules="numeric|required">
           <v-text-field
             v-model="characters"
             :error-messages="errors"
@@ -29,6 +29,7 @@
             :items="group"
             label="What activity group does this belong to?"
             outlined
+            disabled
           ></v-select>
         </validation-provider>
         <validation-provider v-slot="{ errors }" slim rules="required">
@@ -38,6 +39,7 @@
             :items="required"
             label="Is this activity required for participants to complete?"
             outlined
+            disabled
           ></v-select>
         </validation-provider>
 
@@ -53,6 +55,7 @@
             :items="deliverable"
             label="Is this a deliverable?"
             outlined
+            disabled
           ></v-select>
         </validation-provider>
         <!-- <v-select
@@ -67,6 +70,7 @@
             :items="endEarly"
             label="Allow participants to end program early after completion of this activity?"
             outlined
+            disabled
           ></v-select>
         </validation-provider>
         <!-- POST-ACTIVITY REFLECTION -->
@@ -100,7 +104,7 @@
 </template>
 
 <script lang="ts">
-import { reactive, ref, toRefs } from '@vue/composition-api';
+import { defineComponent } from '@vue/composition-api';
 import Instruct from './ModuleInstruct.vue';
 import {
   group,
@@ -113,23 +117,20 @@ import {
 } from './const';
 // import gql from 'graphql-tag';
 
-export default {
+export default defineComponent({
   name: 'ModulePresets',
   components: {
     Instruct
   },
-  apollo: {},
-  setup() {
-    const presets = reactive({
+  data() {
+    return {
       group,
       required,
       lockOrder,
       deliverable,
       notifications,
       accessibility,
-      endEarly
-    });
-    const defaultActivity = reactive({
+      endEarly,
       characters: '280',
       groupActivity: '',
       requiredActivity: '',
@@ -137,19 +138,44 @@ export default {
       deliverableActivity: '',
       notificationsActivity: '',
       accessibilityActivity: '',
-      endEarlyActivity: ''
-    });
-    const setupInstructions = ref({
-      description: '',
-      instructions: ['', '', '']
-    });
-    return {
-      ...toRefs(presets),
-      setupInstructions,
-      ...toRefs(defaultActivity)
+      endEarlyActivity: '',
+      setupInstructions: {
+        description: '',
+        instructions: ['', '', '']
+      }
     };
   }
-};
+  // setup() {
+  //   const presets = reactive({
+  //     group,
+  //     required,
+  //     lockOrder,
+  //     deliverable,
+  //     notifications,
+  //     accessibility,
+  //     endEarly
+  //   });
+  //   const defaultActivity = reactive({
+  //     characters: '280',
+  //     groupActivity: '',
+  //     requiredActivity: '',
+  //     lockOrderActivity: '',
+  //     deliverableActivity: '',
+  //     notificationsActivity: '',
+  //     accessibilityActivity: '',
+  //     endEarlyActivity: ''
+  //   });
+  //   const setupInstructions = ref({
+  //     description: '',
+  //     instructions: ['', '', '']
+  //   });
+  //   return {
+  //     ...toRefs(presets),
+  //     setupInstructions,
+  //     ...toRefs(defaultActivity)
+  //   };
+  // }
+});
 </script>
 
 <style lang="scss">
