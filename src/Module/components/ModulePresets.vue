@@ -130,7 +130,7 @@ export default {
       endEarly
     });
     const defaultActivity = reactive({
-      characters: '',
+      characters: '280',
       groupActivity: '',
       requiredActivity: '',
       lockOrderActivity: '',
