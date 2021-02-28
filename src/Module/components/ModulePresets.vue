@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 <template>
   <ValidationObserver v-slot="{}" slim>
     <v-container class="module-outcomes">
@@ -9,11 +10,23 @@
 
         <validation-provider v-slot="{ errors }" slim rules="numeric|required">
           <v-text-field
-            v-model="characters"
+            v-model="programDoc.data.adks[index].maxCharacters"
             :error-messages="errors"
             outlined
             label="Maximum Characters"
           ></v-text-field>
+          <div center class="module-setup__save-button">
+            <v-btn
+              center
+              class="mt-12"
+              x-large
+              outlined
+              depressed
+              :loading="loading"
+              @click="process()"
+              >Save</v-btn
+            >
+          </div>
         </validation-provider>
         <!-- <div class="presets__nopresets">No tweaking necessary</div> -->
         <v-divider class="presets__divider"></v-divider>
@@ -104,7 +117,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api';
+import { defineComponent, computed, PropType, toRefs, reactive, ref } from '@vue/composition-api';
+import { createLoader } from 'pcv4lib/src';
 import Instruct from './ModuleInstruct.vue';
 import {
   group,
@@ -115,6 +129,7 @@ import {
   accessibility,
   endEarly
 } from './const';
+import MongoDoc from '../types';
 // import gql from 'graphql-tag';
 
 export default defineComponent({
@@ -122,59 +137,67 @@ export default defineComponent({
   components: {
     Instruct
   },
-  data() {
-    return {
+  props: {
+    value: {
+      required: true,
+      type: Object as PropType<MongoDoc>
+    }
+  },
+
+  setup(props, ctx) {
+    const programDoc = computed({
+      get: () => props.value,
+      set: newVal => {
+        ctx.emit('input', newVal);
+      }
+    });
+
+    const index = programDoc.value.data.adks.findIndex(function findIdeateObj(obj) {
+      return obj.name === 'ideate';
+    });
+
+    const presets = reactive({
       group,
       required,
-      lockOrder,
       deliverable,
-      notifications,
-      accessibility,
-      endEarly,
-      characters: '280',
-      groupActivity: '',
-      requiredActivity: '',
-      lockOrderActivity: '',
-      deliverableActivity: '',
-      notificationsActivity: '',
-      accessibilityActivity: '',
-      endEarlyActivity: '',
-      setupInstructions: {
-        description: '',
-        instructions: ['', '', '']
-      }
+      endEarly
+    });
+    // // const presetsInstructions = ref({
+    // //   description: '',
+    // //   instructions: ['', '', '']
+    // // });
+    const initIdeatePresets = {
+      maxCharacters: '280',
+      defaultActivity: {
+        groupActivity: 'Screening',
+        requiredActivity: 'Yes',
+        deliverableActivity: 'No',
+        endEarlyActivity: 'Yes',
+        required: false
+      },
+      required: false
+    };
+
+    programDoc.value.data.adks[index] = {
+      ...initIdeatePresets,
+      ...programDoc.value.data.adks[index]
+    };
+    const setupInstructions = ref({
+      description: '',
+      instructions: ['', '', '']
+    });
+
+    console.log(programDoc);
+    console.log(programDoc.value.data.adks[index].maxCharacters);
+
+    return {
+      programDoc,
+      ...createLoader(programDoc.value.update, 'Saved', 'Something went wrong, try again later'),
+      ...toRefs(presets),
+      setupInstructions,
+      index
     };
   }
-  // setup() {
-  //   const presets = reactive({
-  //     group,
-  //     required,
-  //     lockOrder,
-  //     deliverable,
-  //     notifications,
-  //     accessibility,
-  //     endEarly
-  //   });
-  //   const defaultActivity = reactive({
-  //     characters: '280',
-  //     groupActivity: '',
-  //     requiredActivity: '',
-  //     lockOrderActivity: '',
-  //     deliverableActivity: '',
-  //     notificationsActivity: '',
-  //     accessibilityActivity: '',
-  //     endEarlyActivity: ''
-  //   });
-  //   const setupInstructions = ref({
-  //     description: '',
-  //     instructions: ['', '', '']
-  //   });
-  //   return {
-  //     ...toRefs(presets),
-  //     setupInstructions,
-  //     ...toRefs(defaultActivity)
-  //   };
-  // }
 });
 </script>
 
@@ -219,6 +242,12 @@ export default defineComponent({
     color: #ffffff;
     font-size: 18px;
     padding-top: 35px;
+  }
+}
+.module-setup {
+  &__save-button {
+    display: flex;
+    justify-content: center;
   }
 }
 </style>

@@ -4,11 +4,11 @@ networks:
     driver: bridge
 services:
   ideate: #in container-based development
-    image: pilotcity/boiler
+    # image: pilotcity/boiler
     container_name: ideate
-    build: 
-      context: .
-      dockerfile: client.dockerfile 
+    build: .
+    #   context: .
+    #   dockerfile: client.dockerfile 
     environment:
       - NODE_ENV=development
       - CHOKIDAR_USEPOLLING=true

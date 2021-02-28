@@ -265,38 +265,57 @@ body {
 }
 </style>
 <script lang="ts">
-import { computed, reactive, ref, toRefs, defineComponent } from '@vue/composition-api';
+import { computed, reactive, ref, toRefs, defineComponent, PropType } from '@vue/composition-api';
 import '../styles/module.scss';
-// import { Collection } from 'mongodb';
 import * as Module from './components';
+import MongoDoc from './types';
 
 export default defineComponent({
   name: 'ModuleName',
   components: {
-    'module-monitor': Module.Monitor,
+    // 'module-monitor': Module.Monitor,
     'module-setup': Module.Setup,
     'module-presets': Module.Presets,
     'module-preview': Module.Default
   },
-  //   props: {
-  // programCollection: {
-  //   required: true,
-  //   type: Object as PropType<Collection>
-  // },
+  props: {
+    value: {
+      required: true,
+      type: Object as PropType<MongoDoc>
+    }
+  },
+
   // programId: {
   //   require: true,
   //   type: String
   // }
   //   },
-  setup() {
+  setup(props, ctx) {
     //
     // props.programCollection.findOne({
     //   _id: props.programId
     // });
     // ENTER ACTIVITY NAME BELOW
+    const programDoc = computed({
+      get: () => props.value,
+      set: newVal => {
+        ctx.emit('input', newVal);
+      }
+    });
+
+    const index = programDoc.value.data.adks.findIndex(function findOfferObj(obj) {
+      return obj.name === 'ideate';
+    });
+    if (index === -1) {
+      const initOffer = {
+        name: 'ideate'
+      };
+      programDoc.value.data.adks.push(initOffer);
+    }
+
     const moduleName = ref('Ideate');
     const page = reactive({
-      subpages: ['Setup', 'Presets', 'Monitor'],
+      subpages: ['Setup', 'Presets'],
       currentPage: 'Setup'
     });
     const getComponent = computed(() => {
@@ -356,7 +375,8 @@ export default defineComponent({
       getColor,
       ...toRefs(timelineData),
       timeline,
-      comment
+      comment,
+      programDoc
     };
   }
 });

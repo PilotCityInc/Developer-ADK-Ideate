@@ -169,24 +169,62 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api';
+import { defineComponent, computed, PropType, ref } from '@vue/composition-api';
+import { createLoader } from 'pcv4lib/src';
 import Instruct from './ModuleInstruct.vue';
+import MongoDoc from '../types';
 
 export default defineComponent({
   name: 'ModuleDefault',
   components: {
     Instruct
   },
-  data() {
-    return {
+  props: {
+    value: {
+      required: true,
+      type: Object as PropType<MongoDoc>
+    }
+  },
+
+  setup(props, ctx) {
+    const programDoc = computed({
+      get: () => props.value,
+      set: newVal => {
+        ctx.emit('input', newVal);
+      }
+    });
+
+    const index = programDoc.value.data.adks.findIndex(function findIdeateObj(obj) {
+      return obj.name === 'ideate';
+    });
+    if (index === -1) {
+      const initIdeate = {
+        name: 'ideate'
+      };
+      programDoc.value.data.adks.push(initIdeate);
+    }
+
+    const initIdeateDefault = {
       problem: '',
       solution: '',
       innovation: '',
-      user: '',
-      setupInstructions: {
-        description: '',
-        instructions: ['', '', '']
-      },
+      user: ''
+    };
+
+    programDoc.value.data.adks[index] = {
+      ...initIdeateDefault,
+      ...programDoc.value.data.adks[index]
+    };
+
+    const setupInstructions = ref({
+      description: '',
+      instructions: ['', '', '']
+    });
+
+    return {
+      programDoc,
+      setupInstructions,
+      ...createLoader(programDoc.value.update, 'Saved', 'Something went wrong, try again later'),
       showInstructions: 'true'
     };
   }
