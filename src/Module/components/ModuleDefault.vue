@@ -96,13 +96,15 @@
             </v-card>
           </v-menu>
         </div>
-        <validation-provider v-slot="{ errors }" slim rules="max:280">
+        <validation-provider v-slot="{ errors }" slim rules="required">
           <v-textarea
-            v-model="problem"
+            v-model="programDoc.data.adks[index].vlaueDrafts.problem"
             :error-messages="errors"
             placeholder="What 'hair on fire' problem or opportunity are you solving for?"
             prepend-inner-icon="mdi-fire"
             class="module-default__textarea"
+            counter
+            :maxlength="programDoc.data.adks[index].maxCharacters"
             outlined
             label="Problem or Opportunity"
           ></v-textarea>
@@ -110,39 +112,45 @@
 
         <br />
         <br />
-        <validation-provider v-slot="{ errors }" slim rules="max:280">
+        <validation-provider v-slot="{ errors }" slim rules="required">
           <v-textarea
-            v-model="solution"
+            v-model="programDoc.data.adks[index].vlaueDrafts.solution"
             :error-messages="errors"
             placeholder="What bright idea do you have as a solution?"
             prepend-inner-icon="mdi-head-snowflake"
             class="module-default__textarea"
+            counter
+            :maxlength="programDoc.data.adks[index].maxCharacters"
             outlined
             label="Solution or Product"
           ></v-textarea>
         </validation-provider>
         <br />
         <br />
-        <validation-provider v-slot="{ errors }" slim rules="max:280">
+        <validation-provider v-slot="{ errors }" slim rules="required">
           <v-textarea
-            v-model="innovation"
+            v-model="programDoc.data.adks[index].vlaueDrafts.innovation"
             :error-messages="errors"
             placeholder="What unique value does your solution deliver?"
             prepend-inner-icon="mdi-lightning-bolt"
             class="module-default__textarea"
+            counter
+            :maxlength="programDoc.data.adks[index].maxCharacters"
             outlined
             label="Innovation or Unique Value"
           ></v-textarea>
         </validation-provider>
         <br />
         <br />
-        <validation-provider v-slot="{ errors }" slim rules="max:280">
+        <validation-provider v-slot="{ errors }" slim rules="required">
           <v-textarea
-            v-model="user"
+            v-model="programDoc.data.adks[index].vlaueDrafts.user"
             :error-messages="errors"
             placeholder="Identify and describe the user and customer of the solution"
             prepend-inner-icon="mdi-account-group"
             class="module-default__textarea"
+            counter
+            :maxlength="programDoc.data.adks[index].maxCharacters"
             outlined
             label="User or Customer"
           ></v-textarea>
@@ -150,7 +158,9 @@
         <br />
         <br />
         <div class="module-default__row">
-          <div><v-btn x-large outlined depressed>Save Draft</v-btn></div>
+          <div>
+            <v-btn x-large outlined depressed @click="draftcheck">Save Draft</v-btn>
+          </div>
           <div class="ml-auto">
             <v-btn :disabled="invalid" x-large color="green" dark depressed>Make Final Draft</v-btn>
           </div>
@@ -205,11 +215,19 @@ export default defineComponent({
     }
 
     const initIdeateDefault = {
-      problem: '',
-      solution: '',
-      innovation: '',
-      user: ''
+      vlaueDrafts: [
+        {
+          problem: '',
+          solution: '',
+          innovation: '',
+          user: ''
+        }
+      ]
     };
+
+    function draftcheck() {
+      console.log(programDoc.value.data.adks[index]);
+    }
 
     programDoc.value.data.adks[index] = {
       ...initIdeateDefault,
@@ -225,7 +243,9 @@ export default defineComponent({
       programDoc,
       setupInstructions,
       ...createLoader(programDoc.value.update, 'Saved', 'Something went wrong, try again later'),
-      showInstructions: 'true'
+      showInstructions: 'true',
+      index,
+      draftcheck
     };
   }
   // setup() {

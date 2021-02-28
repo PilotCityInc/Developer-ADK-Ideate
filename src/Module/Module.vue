@@ -101,7 +101,7 @@
         </div>
         <div class="module__page">
           <keep-alive>
-            <component :is="getComponent" />
+            <component :is="getComponent" v-model="programDoc" />
           </keep-alive>
         </div>
       </div>
@@ -307,10 +307,10 @@ export default defineComponent({
       return obj.name === 'ideate';
     });
     if (index === -1) {
-      const initOffer = {
+      const initIdeate = {
         name: 'ideate'
       };
-      programDoc.value.data.adks.push(initOffer);
+      programDoc.value.data.adks.push(initIdeate);
     }
 
     const moduleName = ref('Ideate');

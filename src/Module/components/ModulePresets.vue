@@ -37,7 +37,7 @@
 
         <validation-provider v-slot="{ errors }" slim rules="required">
           <v-select
-            v-model="groupActivity"
+            v-model="programDoc.data.adks[index].defaultActivity.groupActivity"
             :error-messages="errors"
             :items="group"
             label="What activity group does this belong to?"
@@ -47,7 +47,7 @@
         </validation-provider>
         <validation-provider v-slot="{ errors }" slim rules="required">
           <v-select
-            v-model="requiredActivity"
+            v-model="programDoc.data.adks[index].defaultActivity.requiredActivity"
             :error-messages="errors"
             :items="required"
             label="Is this activity required for participants to complete?"
@@ -63,7 +63,7 @@
       ></v-select> -->
         <validation-provider v-slot="{ errors }" slim rules="required">
           <v-select
-            v-model="deliverableActivity"
+            v-model="programDoc.data.adks[index].defaultActivity.deliverableActivity"
             :error-messages="errors"
             :items="deliverable"
             label="Is this a deliverable?"
@@ -78,7 +78,7 @@
       ></v-select> -->
         <validation-provider v-slot="{ errors }" slim rules="required">
           <v-select
-            v-model="endEarlyActivity"
+            v-model="programDoc.data.adks[index].defaultActivity.endEarlyActivity"
             :error-messages="errors"
             :items="endEarly"
             label="Allow participants to end program early after completion of this activity?"
@@ -110,7 +110,9 @@
         <!-- Delete break when the two delete buttons above and below have been integrated as one solution -->
         <br />
         <!-- If activity is optional, show button below -->
-        <div><v-btn color="red" dark depressed>Delete Activity</v-btn></div>
+        <div>
+          <v-btn color="red" depressed disabled>Delete Activity</v-btn>
+        </div>
       </div>
     </v-container>
   </ValidationObserver>
@@ -120,15 +122,7 @@
 import { defineComponent, computed, PropType, toRefs, reactive, ref } from '@vue/composition-api';
 import { createLoader } from 'pcv4lib/src';
 import Instruct from './ModuleInstruct.vue';
-import {
-  group,
-  required,
-  lockOrder,
-  deliverable,
-  notifications,
-  accessibility,
-  endEarly
-} from './const';
+import { group, required, deliverable, endEarly } from './const';
 import MongoDoc from '../types';
 // import gql from 'graphql-tag';
 
@@ -174,8 +168,7 @@ export default defineComponent({
         deliverableActivity: 'No',
         endEarlyActivity: 'Yes',
         required: false
-      },
-      required: false
+      }
     };
 
     programDoc.value.data.adks[index] = {
@@ -187,8 +180,8 @@ export default defineComponent({
       instructions: ['', '', '']
     });
 
-    console.log(programDoc);
-    console.log(programDoc.value.data.adks[index].maxCharacters);
+    // console.log(programDoc);
+    // console.log(programDoc.value.data.adks[index].maxCharacters);
 
     return {
       programDoc,
