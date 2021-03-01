@@ -67,7 +67,7 @@
     <div class="module__container" :style="{ 'border-color': getColor }">
       <div class="module__title">
         <div class="module__image rounded-circle">
-          <v-icon light x-large :color="selectedColor">mdi-briefcase-outline</v-icon>
+          <v-icon light x-large :color="selectedColor">mdi-head-flash-outline</v-icon>
         </div>
         <div class="module__header text-md-h5 text-sm-subtitle-1 d-flex align-center">
           <input disabled :value="moduleName" type="text" class="module__header-text" />
