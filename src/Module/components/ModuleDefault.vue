@@ -93,19 +93,20 @@
               >
                 <v-icon left color="#404142">mdi-form-select</v-icon>1st Draft</v-btn
               >
+              -->
             </v-card>
           </v-menu>
         </div>
         <validation-provider v-slot="{ errors }" slim rules="required">
           <v-textarea
+            v-model="programDoc.data.adks[index].vlaueDrafts.problem"
             rounded
             auto-grow
-            v-model="programDoc.data.adks[index].vlaueDrafts.problem"
             :error-messages="errors"
             placeholder="What 'hair on fire' problem or opportunity are you solving for?"
             prepend-inner-icon="mdi-fire"
             class="module-default__textarea"
-            counter="280"
+            :counter="programDoc.data.adks[index].maxCharacters"
             :maxlength="programDoc.data.adks[index].maxCharacters"
             outlined
             label="Problem or Opportunity"
@@ -114,14 +115,14 @@
         <br />
         <validation-provider v-slot="{ errors }" slim rules="required">
           <v-textarea
+            v-model="programDoc.data.adks[index].vlaueDrafts.solution"
             rounded
             auto-grow
-            v-model="programDoc.data.adks[index].vlaueDrafts.solution"
             :error-messages="errors"
             placeholder="What bright idea do you have as a solution?"
             prepend-inner-icon="mdi-head-snowflake"
             class="module-default__textarea"
-            counter="280"
+            :counter="programDoc.data.adks[index].maxCharacters"
             :maxlength="programDoc.data.adks[index].maxCharacters"
             outlined
             label="Solution or Product"
@@ -130,14 +131,14 @@
         <br />
         <validation-provider v-slot="{ errors }" slim rules="required">
           <v-textarea
+            v-model="programDoc.data.adks[index].vlaueDrafts.innovation"
             rounded
             auto-grow
-            v-model="programDoc.data.adks[index].vlaueDrafts.innovation"
             :error-messages="errors"
             placeholder="What unique value does your solution deliver?"
             prepend-inner-icon="mdi-lightning-bolt"
             class="module-default__textarea"
-            counter="280"
+            :counter="programDoc.data.adks[index].maxCharacters"
             :maxlength="programDoc.data.adks[index].maxCharacters"
             outlined
             label="Innovation or Unique Value"
@@ -146,14 +147,14 @@
         <br />
         <validation-provider v-slot="{ errors }" slim rules="required">
           <v-textarea
+            v-model="programDoc.data.adks[index].vlaueDrafts.user"
             rounded
             auto-grow
-            v-model="programDoc.data.adks[index].vlaueDrafts.user"
             :error-messages="errors"
             placeholder="Identify and describe the user and customer of the solution"
             prepend-inner-icon="mdi-account-group"
             class="module-default__textarea"
-            counter="280"
+            :counter="programDoc.data.adks[index].maxCharacters"
             :maxlength="programDoc.data.adks[index].maxCharacters"
             outlined
             label="User or Customer"
@@ -212,12 +213,6 @@ export default defineComponent({
     const index = programDoc.value.data.adks.findIndex(function findIdeateObj(obj) {
       return obj.name === 'ideate';
     });
-    if (index === -1) {
-      const initIdeate = {
-        name: 'ideate'
-      };
-      programDoc.value.data.adks.push(initIdeate);
-    }
 
     const initIdeateDefault = {
       vlaueDrafts: [
@@ -230,8 +225,20 @@ export default defineComponent({
       ]
     };
 
+    const drafts = [];
+    // function draftcheck() {
+    // console.log(programDoc.value.data.adks[index].vlaueDrafts);
+    // Object.keys(programDoc.value.data.adks[index].vlaueDrafts).map(function (key) {
+    //   drafts.push({ [key]: programDoc.value.data.adks[index].vlaueDrafts[key] });
+    // console.log(drafts);
+    // return drafts;
+    // });
+    // console.log(drafts);
+
     function draftcheck() {
-      console.log(programDoc.value.data.adks[index]);
+      // drafts.push(programDoc.value.data.adks[index].vlaueDrafts);
+      // console.log(drafts);
+      console.log(programDoc.value.data.adks[index].vlaueDrafts);
     }
 
     programDoc.value.data.adks[index] = {

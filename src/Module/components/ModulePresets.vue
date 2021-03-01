@@ -11,8 +11,8 @@
         <validation-provider v-slot="{ errors }" slim rules="numeric|required">
           <v-select
             v-model="programDoc.data.adks[index].maxCharacters"
+            :items="maxCharacters"
             :error-messages="errors"
-            :items="maxCharacterOptions"
             outlined
             label="Maximum number of characters for each written answer"
           ></v-select>
@@ -28,6 +28,9 @@
               >Save</v-btn
             >
           </div>
+          <v-alert v-if="success || error" class="mt-3" :type="success ? 'success' : 'error'">{{
+            message
+          }}</v-alert>
         </validation-provider>
         <!-- <div class="presets__nopresets">No tweaking necessary</div> -->
         <v-divider class="presets__divider"></v-divider>
@@ -123,7 +126,7 @@
 import { defineComponent, computed, PropType, toRefs, reactive, ref } from '@vue/composition-api';
 import { createLoader } from 'pcv4lib/src';
 import Instruct from './ModuleInstruct.vue';
-import { group, required, deliverable, endEarly } from './const';
+import { group, required, deliverable, endEarly, maxCharacters } from './const';
 import MongoDoc from '../types';
 // import gql from 'graphql-tag';
 
@@ -151,12 +154,6 @@ export default defineComponent({
       return obj.name === 'ideate';
     });
 
-    const presets = reactive({
-      group,
-      required,
-      deliverable,
-      endEarly
-    });
     // // const presetsInstructions = ref({
     // //   description: '',
     // //   instructions: ['', '', '']
@@ -171,6 +168,18 @@ export default defineComponent({
         required: false
       }
     };
+
+    const presets = reactive({
+      group,
+      required,
+      deliverable,
+      endEarly,
+      maxCharacters
+    });
+
+    // function minuteCheck() {
+    // console.log(programDoc.data.adks[index].maxCharacters);
+    // }
 
     programDoc.value.data.adks[index] = {
       ...initIdeatePresets,
@@ -189,7 +198,6 @@ export default defineComponent({
       ...createLoader(programDoc.value.update, 'Saved', 'Something went wrong, try again later'),
       ...toRefs(presets),
       setupInstructions,
-      maxCharacterOptions: ['144', '280', '500', '750', '1000'],
       index
     };
   }

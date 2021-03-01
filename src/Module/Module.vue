@@ -299,7 +299,7 @@ export default defineComponent({
       }
     });
 
-    const index = programDoc.value.data.adks.findIndex(function findOfferObj(obj) {
+    const index = programDoc.value.data.adks.findIndex(function findIdeateObj(obj) {
       return obj.name === 'ideate';
     });
     if (index === -1) {
