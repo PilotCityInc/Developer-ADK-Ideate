@@ -6,15 +6,16 @@
         <!-- <v-divider class="presets__divider"></v-divider> -->
         <div class="presets__section-title">General</div>
         <!-- <div class="presets__nopresets">No tweaking necessary</div> -->
-        <span class="presets__question-title">Set maximum number of characters (280 default)</span>
+        <!-- <span class="presets__question-title">Set maximum number of characters (280 default)</span> -->
 
         <validation-provider v-slot="{ errors }" slim rules="numeric|required">
-          <v-text-field
+          <v-select
             v-model="programDoc.data.adks[index].maxCharacters"
             :error-messages="errors"
+            :items="maxCharacterOptions"
             outlined
-            label="Maximum Characters"
-          ></v-text-field>
+            label="Maximum number of characters for each written answer"
+          ></v-select>
           <div center class="module-setup__save-button">
             <v-btn
               center
@@ -188,6 +189,7 @@ export default defineComponent({
       ...createLoader(programDoc.value.update, 'Saved', 'Something went wrong, try again later'),
       ...toRefs(presets),
       setupInstructions,
+      maxCharacterOptions: ['144', '280', '500', '750', '1000'],
       index
     };
   }

@@ -1,6 +1,6 @@
 <template>
   <ValidationObserver v-slot="{ invalid }" slim>
-    <v-container>
+    <div>
       <div>
         <v-expansion-panels v-model="showInstructions" flat>
           <v-expansion-panel>
@@ -44,11 +44,11 @@
         buffer-value="100"
         stream
       />
-      <div>
+      <div class="pa-6">
         <div class="module-default__row mb-10">
           <v-menu open-on-hover offset-y>
             <template v-slot:activator="{ on, attrs }">
-              <v-btn v-bind="attrs" small dark color="green" depressed v-on="on"
+              <v-btn rounded v-bind="attrs" dark color="green" depressed v-on="on"
                 ><v-icon left>mdi-form-select</v-icon>Final Draft</v-btn
               >
             </template>
@@ -98,71 +98,76 @@
         </div>
         <validation-provider v-slot="{ errors }" slim rules="required">
           <v-textarea
+            rounded
+            auto-grow
             v-model="programDoc.data.adks[index].vlaueDrafts.problem"
             :error-messages="errors"
             placeholder="What 'hair on fire' problem or opportunity are you solving for?"
             prepend-inner-icon="mdi-fire"
             class="module-default__textarea"
-            counter
+            counter="280"
             :maxlength="programDoc.data.adks[index].maxCharacters"
             outlined
             label="Problem or Opportunity"
           ></v-textarea>
         </validation-provider>
-
-        <br />
         <br />
         <validation-provider v-slot="{ errors }" slim rules="required">
           <v-textarea
+            rounded
+            auto-grow
             v-model="programDoc.data.adks[index].vlaueDrafts.solution"
             :error-messages="errors"
             placeholder="What bright idea do you have as a solution?"
             prepend-inner-icon="mdi-head-snowflake"
             class="module-default__textarea"
-            counter
+            counter="280"
             :maxlength="programDoc.data.adks[index].maxCharacters"
             outlined
             label="Solution or Product"
           ></v-textarea>
         </validation-provider>
         <br />
-        <br />
         <validation-provider v-slot="{ errors }" slim rules="required">
           <v-textarea
+            rounded
+            auto-grow
             v-model="programDoc.data.adks[index].vlaueDrafts.innovation"
             :error-messages="errors"
             placeholder="What unique value does your solution deliver?"
             prepend-inner-icon="mdi-lightning-bolt"
             class="module-default__textarea"
-            counter
+            counter="280"
             :maxlength="programDoc.data.adks[index].maxCharacters"
             outlined
             label="Innovation or Unique Value"
           ></v-textarea>
         </validation-provider>
         <br />
-        <br />
         <validation-provider v-slot="{ errors }" slim rules="required">
           <v-textarea
+            rounded
+            auto-grow
             v-model="programDoc.data.adks[index].vlaueDrafts.user"
             :error-messages="errors"
             placeholder="Identify and describe the user and customer of the solution"
             prepend-inner-icon="mdi-account-group"
             class="module-default__textarea"
-            counter
+            counter="280"
             :maxlength="programDoc.data.adks[index].maxCharacters"
             outlined
             label="User or Customer"
           ></v-textarea>
         </validation-provider>
         <br />
-        <br />
         <div class="module-default__row">
           <div>
-            <v-btn x-large outlined depressed @click="draftcheck">Save Draft</v-btn>
+            <v-btn rounded x-large outlined depressed @click="draftcheck">Save Draft</v-btn>
           </div>
           <div class="ml-auto">
-            <v-btn :disabled="invalid" x-large color="green" dark depressed>Make Final Draft</v-btn>
+            <v-btn :disabled="invalid" x-large rounded color="green" dark depressed>
+              Make Final Draft
+            </v-btn>
           </div>
           <!-- <div><v-btn small disabled depressed>Current Version</v-btn></div>
         <div><v-btn small outlined depressed>Version 4</v-btn></div>
@@ -174,7 +179,7 @@
         <!-- DESIGN YOUR ACTIVITY HERE / COMMENT OUT WHEN YOU'VE STARTED DESIGNING -->
         <!-- <div class="module-default__none">Design your activity here</div> -->
       </div>
-    </v-container>
+    </div>
   </ValidationObserver>
 </template>
 
@@ -294,7 +299,7 @@ export default defineComponent({
 
   &__collapse-divider {
     margin-top: 15px;
-    margin-bottom: 75px;
+    // margin-bottom: 75px;
     margin-right: none;
     margin-left: none;
     padding-right: none;
