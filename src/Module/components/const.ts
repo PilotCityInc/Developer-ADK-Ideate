@@ -17,4 +17,15 @@ const endEarly = [
 ];
 export const maxCharacters = ['144', '280', '500', '750', '1000'];
 
-export { group, required, lockOrder, deliverable, notifications, accessibility, endEarly };
+export const answerDrafts = [];
+
+export {
+  group,
+  required,
+  lockOrder,
+  deliverable,
+  notifications,
+  accessibility,
+  endEarly
+  // answerDrafts
+};

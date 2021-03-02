@@ -189,6 +189,7 @@ import { defineComponent, computed, PropType, ref } from '@vue/composition-api';
 import { createLoader } from 'pcv4lib/src';
 import Instruct from './ModuleInstruct.vue';
 import MongoDoc from '../types';
+import { answerDrafts } from './const';
 
 export default defineComponent({
   name: 'ModuleDefault',
@@ -219,6 +220,17 @@ export default defineComponent({
     const innovation = ref('');
     const user = ref('');
 
+    const testDraftSave = {
+      valueDrafts: [
+        {
+          problem: '',
+          solution: '',
+          innovation: '',
+          user: ''
+        }
+      ]
+    };
+
     const initIdeateDefault = {
       vlaueDrafts: [
         {
@@ -230,7 +242,7 @@ export default defineComponent({
       ]
     };
 
-    const drafts = [];
+    // const drafts = [];
     // function draftcheck() {
     // console.log(programDoc.value.data.adks[index].vlaueDrafts);
     // Object.keys(programDoc.value.data.adks[index].vlaueDrafts).map(function (key) {
@@ -240,13 +252,14 @@ export default defineComponent({
     // });
     // console.log(drafts);
 
+    // function draftcheck() {
+    // drafts.push(programDoc.value.data.adks[index].vlaueDrafts);
+    // console.log(drafts);
+    // console.log(programDoc.value.data.adks[index].vlaueDrafts);
+    // }
+
     function draftcheck() {
-      // drafts.push(programDoc.value.data.adks[index].vlaueDrafts);
-      // console.log(drafts);
       console.log(programDoc.value.data.adks[index].vlaueDrafts);
-      // drafts.push(programDoc.value.data.adks[index].vlaueDrafts);
-      // console.log(drafts);
-      // console.log(drafts[0].problem);
     }
 
     programDoc.value.data.adks[index] = {
@@ -265,11 +278,7 @@ export default defineComponent({
       ...createLoader(programDoc.value.update, 'Saved', 'Something went wrong, try again later'),
       showInstructions: 'true',
       index,
-      draftcheck,
-      problem,
-      solution,
-      innovation,
-      user
+      draftcheck
     };
   }
   // setup() {
