@@ -214,6 +214,11 @@ export default defineComponent({
       return obj.name === 'ideate';
     });
 
+    const problem = ref('');
+    const solution = ref('');
+    const innovation = ref('');
+    const user = ref('');
+
     const initIdeateDefault = {
       vlaueDrafts: [
         {
@@ -239,6 +244,9 @@ export default defineComponent({
       // drafts.push(programDoc.value.data.adks[index].vlaueDrafts);
       // console.log(drafts);
       console.log(programDoc.value.data.adks[index].vlaueDrafts);
+      // drafts.push(programDoc.value.data.adks[index].vlaueDrafts);
+      // console.log(drafts);
+      // console.log(drafts[0].problem);
     }
 
     programDoc.value.data.adks[index] = {
@@ -257,7 +265,11 @@ export default defineComponent({
       ...createLoader(programDoc.value.update, 'Saved', 'Something went wrong, try again later'),
       showInstructions: 'true',
       index,
-      draftcheck
+      draftcheck,
+      problem,
+      solution,
+      innovation,
+      user
     };
   }
   // setup() {
