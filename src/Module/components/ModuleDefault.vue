@@ -99,7 +99,7 @@
         </div>
         <validation-provider v-slot="{ errors }" slim rules="required">
           <v-textarea
-            v-model="programDoc.data.adks[index].vlaueDrafts.problem"
+            v-model="programDoc.data.adks[index].vlaueDrafts[IndexVal].problem"
             rounded
             auto-grow
             :error-messages="errors"
@@ -115,7 +115,7 @@
         <br />
         <validation-provider v-slot="{ errors }" slim rules="required">
           <v-textarea
-            v-model="programDoc.data.adks[index].vlaueDrafts.solution"
+            v-model="programDoc.data.adks[index].vlaueDrafts[IndexVal].solution"
             rounded
             auto-grow
             :error-messages="errors"
@@ -131,7 +131,7 @@
         <br />
         <validation-provider v-slot="{ errors }" slim rules="required">
           <v-textarea
-            v-model="programDoc.data.adks[index].vlaueDrafts.innovation"
+            v-model="programDoc.data.adks[index].vlaueDrafts[IndexVal].innovation"
             rounded
             auto-grow
             :error-messages="errors"
@@ -147,7 +147,7 @@
         <br />
         <validation-provider v-slot="{ errors }" slim rules="required">
           <v-textarea
-            v-model="programDoc.data.adks[index].vlaueDrafts.user"
+            v-model="programDoc.data.adks[index].vlaueDrafts[IndexVal].user"
             rounded
             auto-grow
             :error-messages="errors"
@@ -189,7 +189,6 @@ import { defineComponent, computed, PropType, ref } from '@vue/composition-api';
 import { createLoader } from 'pcv4lib/src';
 import Instruct from './ModuleInstruct.vue';
 import MongoDoc from '../types';
-import { answerDrafts } from './const';
 
 export default defineComponent({
   name: 'ModuleDefault',
@@ -215,21 +214,10 @@ export default defineComponent({
       return obj.name === 'ideate';
     });
 
-    const problem = ref('');
-    const solution = ref('');
-    const innovation = ref('');
-    const user = ref('');
-
-    const testDraftSave = {
-      valueDrafts: [
-        {
-          problem: '',
-          solution: '',
-          innovation: '',
-          user: ''
-        }
-      ]
-    };
+    // const problem = ref('');
+    // const solution = ref('');
+    // const innovation = ref('');
+    // const user = ref('');
 
     const initIdeateDefault = {
       vlaueDrafts: [
@@ -238,34 +226,33 @@ export default defineComponent({
           solution: '',
           innovation: '',
           user: ''
+          // draftIndex: ''
         }
       ]
     };
-
-    // const drafts = [];
-    // function draftcheck() {
-    // console.log(programDoc.value.data.adks[index].vlaueDrafts);
-    // Object.keys(programDoc.value.data.adks[index].vlaueDrafts).map(function (key) {
-    //   drafts.push({ [key]: programDoc.value.data.adks[index].vlaueDrafts[key] });
-    // console.log(drafts);
-    // return drafts;
-    // });
-    // console.log(drafts);
-
-    // function draftcheck() {
-    // drafts.push(programDoc.value.data.adks[index].vlaueDrafts);
-    // console.log(drafts);
-    // console.log(programDoc.value.data.adks[index].vlaueDrafts);
-    // }
-
-    function draftcheck() {
-      console.log(programDoc.value.data.adks[index].vlaueDrafts);
-    }
 
     programDoc.value.data.adks[index] = {
       ...initIdeateDefault,
       ...programDoc.value.data.adks[index]
     };
+
+    const IndexVal = ref(programDoc.value.data.adks[index].vlaueDrafts.length - 1);
+
+    function draftcheck() {
+      const draft = ref({
+        problem: '',
+        solution: '',
+        innovation: '',
+        user: ''
+        // index: ''
+      });
+      const draftIndex = programDoc.value.data.adks[index].vlaueDrafts.length - 1;
+      console.log(draftIndex);
+      console.log(programDoc.value.data.adks[index].vlaueDrafts);
+      programDoc.value.data.adks[index].vlaueDrafts.push(draft.value);
+      console.log(programDoc.value.data.adks[index].vlaueDrafts);
+      IndexVal.value += 1;
+    }
 
     const setupInstructions = ref({
       description: '',
@@ -278,7 +265,14 @@ export default defineComponent({
       ...createLoader(programDoc.value.update, 'Saved', 'Something went wrong, try again later'),
       showInstructions: 'true',
       index,
-      draftcheck
+      draftcheck,
+      IndexVal
+
+      // indexVal
+      // problem,
+      // solution,
+      // innovation,
+      // user
     };
   }
   // setup() {
