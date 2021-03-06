@@ -248,9 +248,9 @@ export default defineComponent({
       });
       const draftIndex = programDoc.value.data.adks[index].vlaueDrafts.length - 1;
       console.log(draftIndex);
-      // console.log(programDoc.value.data.adks[index].vlaueDrafts);
       programDoc.value.data.adks[index].vlaueDrafts.push(draft.value);
       console.log(programDoc.value.data.adks[index].vlaueDrafts);
+      console.log(IndexVal.value);
       IndexVal.value += 1;
     }
 
