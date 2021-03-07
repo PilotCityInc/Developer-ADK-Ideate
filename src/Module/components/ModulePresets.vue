@@ -10,7 +10,7 @@
 
         <validation-provider v-slot="{ errors }" slim rules="numeric|required">
           <v-select
-            v-model="programDoc.data.adks[index].maxCharacters"
+            v-model="adkData.maxCharacters"
             :items="maxCharacters"
             :error-messages="errors"
             outlined
@@ -41,7 +41,7 @@
 
         <validation-provider v-slot="{ errors }" slim rules="required">
           <v-select
-            v-model="programDoc.data.adks[index].defaultActivity.groupActivity"
+            v-model="adkData.defaultActivity.groupActivity"
             :error-messages="errors"
             :items="group"
             label="What activity group does this belong to?"
@@ -51,7 +51,7 @@
         </validation-provider>
         <validation-provider v-slot="{ errors }" slim rules="required">
           <v-select
-            v-model="programDoc.data.adks[index].defaultActivity.requiredActivity"
+            v-model="adkData.defaultActivity.requiredActivity"
             :error-messages="errors"
             :items="required"
             label="Is this activity required for participants to complete?"
@@ -67,7 +67,7 @@
       ></v-select> -->
         <validation-provider v-slot="{ errors }" slim rules="required">
           <v-select
-            v-model="programDoc.data.adks[index].defaultActivity.deliverableActivity"
+            v-model="adkData.defaultActivity.deliverableActivity"
             :error-messages="errors"
             :items="deliverable"
             label="Is this a deliverable?"
@@ -82,7 +82,7 @@
       ></v-select> -->
         <validation-provider v-slot="{ errors }" slim rules="required">
           <v-select
-            v-model="programDoc.data.adks[index].defaultActivity.endEarlyActivity"
+            v-model="adkData.defaultActivity.endEarlyActivity"
             :error-messages="errors"
             :items="endEarly"
             label="Allow participants to end program early after completion of this activity?"
@@ -124,7 +124,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType, toRefs, reactive, ref } from '@vue/composition-api';
-import { createLoader } from 'pcv4lib/src';
+import { loading, getModAdk, getModMongoDoc } from 'pcv4lib/src';
 import Instruct from './ModuleInstruct.vue';
 import { group, required, deliverable, endEarly, maxCharacters } from './const';
 import MongoDoc from '../types';
@@ -139,20 +139,26 @@ export default defineComponent({
     value: {
       required: true,
       type: Object as PropType<MongoDoc>
+    },
+    studentDoc: {
+      required: true,
+      type: Object as PropType<MongoDoc | null>,
+      default: () => {}
     }
   },
 
   setup(props, ctx) {
-    const programDoc = computed({
-      get: () => props.value,
-      set: newVal => {
-        ctx.emit('input', newVal);
-      }
-    });
+    const studentDocument = getModMongoDoc(props, ctx.emit, {}, 'studentDoc', 'inputStudentDoc');
+    // const programDoc = computed({
+    //   get: () => props.value,
+    //   set: newVal => {
+    //     ctx.emit('input', newVal);
+    //   }
+    // });
 
-    const index = programDoc.value.data.adks.findIndex(function findIdeateObj(obj) {
-      return obj.name === 'ideate';
-    });
+    // const index = programDoc.value.data.adks.findIndex(function findIdeateObj(obj) {
+    //   return obj.name === 'ideate';
+    // });
 
     // // const presetsInstructions = ref({
     // //   description: '',
@@ -168,6 +174,14 @@ export default defineComponent({
         required: false
       }
     };
+    const { adkData } = getModAdk(
+      props,
+      ctx.emit,
+      'Ideate',
+      initIdeatePresets,
+      'studentDoc',
+      'inputStudentDoc'
+    );
 
     const presets = reactive({
       group,
@@ -181,24 +195,21 @@ export default defineComponent({
     // console.log(programDoc.data.adks[index].maxCharacters);
     // }
 
-    programDoc.value.data.adks[index] = {
-      ...initIdeatePresets,
-      ...programDoc.value.data.adks[index]
-    };
     const setupInstructions = ref({
       description: '',
       instructions: ['', '', '']
     });
 
     // console.log(programDoc);
-    // console.log(programDoc.value.data.adks[index].maxCharacters);
+    // console.log(adkData.value.maxCharacters);
 
     return {
-      programDoc,
-      ...createLoader(programDoc.value.update, 'Saved', 'Something went wrong, try again later'),
+      studentDocument,
+      ...loading(studentDocument.value.update, 'Saved Successfully', 'Could not save at this time'),
       ...toRefs(presets),
       setupInstructions,
-      index
+      adkData
+      // index
     };
   }
 });

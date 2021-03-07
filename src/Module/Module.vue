@@ -103,7 +103,12 @@
         </div>
         <div class="module__page">
           <keep-alive>
-            <component :is="getComponent" v-model="programDoc" />
+            <component
+              :is="getComponent"
+              v-model="studentDoc"
+              :student-doc="studentDoc"
+              @inputStudentDoc="$emit('inputStudentDoc', $event)"
+            />
           </keep-alive>
         </div>
       </div>
@@ -263,6 +268,7 @@ body {
 <script lang="ts">
 import { computed, reactive, ref, toRefs, defineComponent, PropType } from '@vue/composition-api';
 import '../styles/module.scss';
+import { getModMongoDoc } from 'pcv4lib/src';
 import * as Module from './components';
 import MongoDoc from './types';
 
@@ -278,6 +284,11 @@ export default defineComponent({
     value: {
       required: true,
       type: Object as PropType<MongoDoc>
+    },
+    studentDoc: {
+      required: true,
+      type: Object as PropType<MongoDoc | null>,
+      default: () => {}
     }
   },
 
@@ -292,22 +303,7 @@ export default defineComponent({
     //   _id: props.programId
     // });
     // ENTER ACTIVITY NAME BELOW
-    const programDoc = computed({
-      get: () => props.value,
-      set: newVal => {
-        ctx.emit('input', newVal);
-      }
-    });
-
-    const index = programDoc.value.data.adks.findIndex(function findIdeateObj(obj) {
-      return obj.name === 'ideate';
-    });
-    if (index === -1) {
-      const initIdeate = {
-        name: 'ideate'
-      };
-      programDoc.value.data.adks.push(initIdeate);
-    }
+    const studentDocument = getModMongoDoc(props, ctx.emit, {}, 'studentDoc', 'inputStudentDoc');
 
     const moduleName = ref('Ideate');
     const page = reactive({
@@ -372,7 +368,7 @@ export default defineComponent({
       ...toRefs(timelineData),
       timeline,
       comment,
-      programDoc
+      studentDocument
     };
   }
 });
