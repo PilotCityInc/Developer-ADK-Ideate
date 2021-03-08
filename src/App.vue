@@ -2,6 +2,7 @@
   <v-app>
     <Module
       v-model="programDocStub"
+      :user-type="userTypeStub"
       :student-doc="studentDoc"
       @inputStudentDoc="studentDoc = $event"
     />
@@ -36,6 +37,7 @@ export default defineComponent({
       },
       changeStream: {}
     });
+    const userTypeStub = 'participant';
     const studentDoc: Ref<MongoDoc> = ref({
       data: {
         adks: []
@@ -52,6 +54,7 @@ export default defineComponent({
     });
     return {
       programDocStub,
+      userTypeStub,
       studentDoc
     };
   }
