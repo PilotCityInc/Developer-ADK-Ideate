@@ -14,13 +14,16 @@
             :items="maxCharacters"
             :error-messages="errors"
             outlined
+            rounded
+            x-large
             label="Maximum number of characters for each written answer"
           ></v-select>
           <div center class="module-setup__save-button">
             <v-btn
               center
-              class="mt-12"
+              class="mt-6"
               x-large
+              rounded
               outlined
               depressed
               :loading="loading"
@@ -33,7 +36,7 @@
           }}</v-alert>
         </validation-provider>
         <!-- <div class="presets__nopresets">No tweaking necessary</div> -->
-        <v-divider class="presets__divider"></v-divider>
+        <!-- <v-divider class="presets__divider"></v-divider>
         <div class="presets__section-title">Instructions</div>
         <Instruct v-model="setupInstructions" />
         <v-divider class="presets__divider"></v-divider>
@@ -58,14 +61,14 @@
             outlined
             disabled
           ></v-select>
-        </validation-provider>
+        </validation-provider> -->
 
         <!-- <v-select
         :items="lockOrder"
         label="Lock activity group and placement order?"
         outlined
       ></v-select> -->
-        <validation-provider v-slot="{ errors }" slim rules="required">
+        <!-- <validation-provider v-slot="{ errors }" slim rules="required">
           <v-select
             v-model="adkData.defaultActivity.deliverableActivity"
             :error-messages="errors"
@@ -74,13 +77,13 @@
             outlined
             disabled
           ></v-select>
-        </validation-provider>
+        </validation-provider> -->
         <!-- <v-select
         :items="accessibility"
         label="Make this activity accessible to participants anytime?"
         outlined
       ></v-select> -->
-        <validation-provider v-slot="{ errors }" slim rules="required">
+        <!-- <validation-provider v-slot="{ errors }" slim rules="required">
           <v-select
             v-model="adkData.defaultActivity.endEarlyActivity"
             :error-messages="errors"
@@ -89,7 +92,7 @@
             outlined
             disabled
           ></v-select>
-        </validation-provider>
+        </validation-provider> -->
         <!-- POST-ACTIVITY REFLECTION -->
         <!-- <v-text-field
         label="Post-Activity Reflection"
@@ -101,7 +104,7 @@
         <v-btn class="presets__reflection-buttons" small depressed outlined>Save</v-btn>
         <v-btn class="presets__reflection-buttons" small depressed outlined>Preview</v-btn>
       </div> -->
-        <v-divider class="presets__divider"></v-divider>
+        <!-- <v-divider class="presets__divider"></v-divider> -->
         <!-- If activity is required, show button below, make tooltip show up while disabled, right now tooltip doesn't show up -->
         <!-- <div>
         <v-tooltip bottom>
@@ -112,11 +115,11 @@
         </v-tooltip>
       </div> -->
         <!-- Delete break when the two delete buttons above and below have been integrated as one solution -->
-        <br />
+        <!-- <br /> -->
         <!-- If activity is optional, show button below -->
-        <div>
+        <!-- <div>
           <v-btn color="red" depressed disabled>Delete Activity</v-btn>
-        </div>
+        </div> -->
       </div>
     </v-container>
   </ValidationObserver>
@@ -125,7 +128,7 @@
 <script lang="ts">
 import { defineComponent, computed, PropType, toRefs, reactive, ref } from '@vue/composition-api';
 import { loading, getModAdk, getModMongoDoc } from 'pcv4lib/src';
-import Instruct from './ModuleInstruct.vue';
+// import Instruct from './ModuleInstruct.vue';
 import { group, required, deliverable, endEarly, maxCharacters } from './const';
 import MongoDoc from '../types';
 // import gql from 'graphql-tag';
@@ -133,7 +136,7 @@ import MongoDoc from '../types';
 export default defineComponent({
   name: 'ModulePresets',
   components: {
-    Instruct
+    // Instruct
   },
   props: {
     value: {
