@@ -1,4 +1,5 @@
 <template>
+  <!-- eslint-disable-next-line vue/no-unused-vars -->
   <ValidationObserver v-slot="{ invalid }" slim>
     <div>
       <div>
@@ -48,6 +49,18 @@
         <div class="module-default__row mb-10">
           <v-menu offset-y>
             <template v-slot:activator="{ on, attrs }">
+              <!-- <v-btn
+                v-if="display == 1"
+                :index="display"
+                rounded
+                v-bind="attrs"
+                dark
+                color="yellow"
+                depressed
+                v-on="on"
+                ><v-icon left>mdi-form-select</v-icon>
+                No Drafts Yet
+              </v-btn> -->
               <v-btn rounded v-bind="attrs" dark color="green" depressed v-on="on"
                 ><v-icon left>mdi-form-select</v-icon>
                 {{ finalDraftSaved + ' #' + display }}
@@ -196,24 +209,25 @@
             <v-btn rounded x-large outlined depressed @click="draftSave">Save Draft</v-btn>
           </div>
           <!-- <v-alert
-            v-if="draftSave"
+            v-if="success == true"
             type="success"
             dismissible
             border="left"
             close-text="Close Alert"
           >
             Draft saved!
+          </v-alert>
+          <v-alert
+            v-if="success == false"
+            type="error"
+            dismissible
+            border="left"
+            close-text="Close Alert"
+          >
+            Error saving draft. Maybe duplicate data or other reason!
           </v-alert> -->
           <div class="ml-auto">
-            <v-btn
-              :disabled="invalid"
-              x-large
-              rounded
-              color="green"
-              dark
-              depressed
-              @click="finalDraft"
-            >
+            <v-btn :disabled="invalid" x-large rounded color="green" depressed @click="finalDraft">
               Make Final Draft
             </v-btn>
           </div>
@@ -234,6 +248,7 @@
 <script lang="ts">
 import { defineComponent, PropType, ref } from '@vue/composition-api';
 import { getModAdk, getModMongoDoc } from 'pcv4lib/src';
+import Swal from 'sweetalert2';
 import Instruct from './ModuleInstruct.vue';
 import MongoDoc from '../types';
 
@@ -282,6 +297,7 @@ export default defineComponent({
     const IndexVal = ref(adkData.value.vlaueDrafts.length - 1);
     const display = ref(IndexVal.value + 1);
     const finalDraftSaved = ref('Draft');
+    const success = ref();
 
     function draftSave() {
       const draftNum = adkData.value.vlaueDrafts.length - 1;
@@ -294,37 +310,68 @@ export default defineComponent({
         draftIndex: IndexVal.value + 1
         // index: ''
       });
-      if (adkData.value.vlaueDrafts.length - 1 <= 0) {
-        adkData.value.vlaueDrafts.push(draft.value);
-        // console.log('draft saved, first draft');
-        // console.log(adkData.value.vlaueDrafts);
-        // eslint-disable-next-line no-plusplus
-        IndexVal.value++;
-        // eslint-disable-next-line no-plusplus
-        display.value++;
-        // success = true;
-      } else if (adkData.value.vlaueDrafts.length - IndexVal.value === 2) {
-        // console.log('first item');
-      } else if (
-        adkData.value.vlaueDrafts[draftNum].problem !==
-          adkData.value.vlaueDrafts[draftNum - 1].problem ||
-        adkData.value.vlaueDrafts[draftNum].solution !==
-          adkData.value.vlaueDrafts[draftNum - 1].solution ||
-        adkData.value.vlaueDrafts[draftNum].innovation !==
-          adkData.value.vlaueDrafts[draftNum - 1].innovation ||
-        adkData.value.vlaueDrafts[draftNum].user !== adkData.value.vlaueDrafts[draftNum - 1].user
+      if (
+        adkData.value.vlaueDrafts[draftNum].problem.length !== 0 ||
+        adkData.value.vlaueDrafts[draftNum].solution.length !== 0 ||
+        adkData.value.vlaueDrafts[draftNum].innovation.length !== 0 ||
+        adkData.value.vlaueDrafts[draftNum].user.length !== 0
       ) {
-        adkData.value.vlaueDrafts.push(draft.value);
-        // console.log('draft saved');
-        // console.log(adkData.value.vlaueDrafts);
-        // success = true;
-        // eslint-disable-next-line no-plusplus
-        IndexVal.value++;
-        // eslint-disable-next-line no-plusplus
-        display.value++;
+        if (adkData.value.vlaueDrafts.length - 1 <= 0) {
+          adkData.value.vlaueDrafts.push(draft.value);
+          // console.log('draft saved, first draft');
+          // console.log(adkData.value.vlaueDrafts);
+          // eslint-disable-next-line no-plusplus
+          IndexVal.value++;
+          // eslint-disable-next-line no-plusplus
+          display.value++;
+          console.log(display.value);
+          success.value = true;
+          Swal.fire({
+            type: 'success',
+            title: 'Success!',
+            text: 'Your draft has been successfully saved!'
+          });
+        } else if (adkData.value.vlaueDrafts.length - IndexVal.value === 2) {
+          console.log('first item');
+        } else if (
+          adkData.value.vlaueDrafts[draftNum].problem !==
+            adkData.value.vlaueDrafts[draftNum - 1].problem ||
+          adkData.value.vlaueDrafts[draftNum].solution !==
+            adkData.value.vlaueDrafts[draftNum - 1].solution ||
+          adkData.value.vlaueDrafts[draftNum].innovation !==
+            adkData.value.vlaueDrafts[draftNum - 1].innovation ||
+          adkData.value.vlaueDrafts[draftNum].user !== adkData.value.vlaueDrafts[draftNum - 1].user
+        ) {
+          adkData.value.vlaueDrafts.push(draft.value);
+          // console.log('draft saved');
+          // console.log(adkData.value.vlaueDrafts);
+          success.value = true;
+          // eslint-disable-next-line no-plusplus
+          IndexVal.value++;
+          // eslint-disable-next-line no-plusplus
+          display.value++;
+          console.log(display.value);
+          Swal.fire({
+            type: 'success',
+            title: 'Success!',
+            text: 'Your draft has been successfully saved!'
+          });
+        } else {
+          // console.log('duplicate data');
+          // success = false;
+          Swal.fire({
+            type: 'success',
+            title: 'Success!',
+            text: 'Your draft has been successfully saved!'
+          });
+        }
       } else {
-        // console.log('duplicate data');
-        // success = false;
+        Swal.fire({
+          type: 'error',
+          title: 'Oops...',
+          text: 'You forgot to write something in!'
+          // footer: 'asd'
+        });
       }
     }
     const indexNum = '';
@@ -348,6 +395,12 @@ export default defineComponent({
       // console.log(adkData.value.vlaueDrafts);
       finalDraftSaved.value = 'Final: Draft';
       display.value = IndexVal.value + 1;
+      console.log(display.value);
+      Swal.fire({
+        type: 'success',
+        title: 'Success!',
+        text: 'Successfully marked as final draft!'
+      });
       // IndexVal.value = adkData.value.vlaueDrafts.length - 1;
     }
 
@@ -362,6 +415,7 @@ export default defineComponent({
       // eslint-disable-next-line operator-assignment
       IndexVal.value = adkData.value.vlaueDrafts.length - draft;
       display.value = IndexVal.value + 1;
+      console.log(display.value);
       // console.log(IndexVal.value);
       // console.log(adkData.value.vlaueDrafts[IndexVal.value].finalDraft);
       if (adkData.value.vlaueDrafts[IndexVal.value + 1].finalDraft === true) {
@@ -392,7 +446,8 @@ export default defineComponent({
       indexNum,
       finalDraftIndex,
       display,
-      adkData
+      adkData,
+      success
     };
   }
   // setup() {
