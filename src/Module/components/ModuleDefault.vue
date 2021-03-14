@@ -1,7 +1,7 @@
 <template>
   <!-- eslint-disable-next-line vue/no-unused-vars -->
   <ValidationObserver v-slot="{ invalid }" slim>
-    <div>
+    <v-container class="module-default pa-0">
       <div>
         <v-expansion-panels v-model="showInstructions" flat>
           <v-expansion-panel>
@@ -241,7 +241,7 @@
         <!-- DESIGN YOUR ACTIVITY HERE / COMMENT OUT WHEN YOU'VE STARTED DESIGNING -->
         <!-- <div class="module-default__none">Design your activity here</div> -->
       </div>
-    </div>
+    </v-container>
   </ValidationObserver>
 </template>
 
