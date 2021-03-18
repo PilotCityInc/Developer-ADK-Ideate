@@ -237,7 +237,7 @@ body {
 }
 
 .v-timeline-item__divider {
-  align-items: start !important;
+  // align-items: start !important;
 }
 
 .module {
