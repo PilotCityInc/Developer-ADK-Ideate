@@ -285,7 +285,7 @@ export default defineComponent({
       ]
     };
 
-    const { adkData } = getModAdk(
+    const { adkData, adkIndex } = getModAdk(
       props,
       ctx.emit,
       'Ideate',
@@ -401,6 +401,10 @@ export default defineComponent({
         title: 'Success!',
         text: 'Successfully marked as final draft!'
       });
+      adkData.value.update(() => ({
+        isComplete: true,
+        adkIndex: adkIndex
+      }))
       // IndexVal.value = adkData.value.vlaueDrafts.length - 1;
     }
 
