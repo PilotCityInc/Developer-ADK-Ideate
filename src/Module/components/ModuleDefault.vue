@@ -49,18 +49,6 @@
         <div class="module-default__row mb-10">
           <v-menu offset-y>
             <template v-slot:activator="{ on, attrs }">
-              <!-- <v-btn
-                v-if="display == 1"
-                :index="display"
-                rounded
-                v-bind="attrs"
-                dark
-                color="yellow"
-                depressed
-                v-on="on"
-                ><v-icon left>mdi-form-select</v-icon>
-                No Drafts Yet
-              </v-btn> -->
               <v-btn rounded v-bind="attrs" dark color="green" depressed v-on="on"
                 ><v-icon left>mdi-form-select</v-icon>
                 {{ finalDraftSaved + ' #' + display }}
@@ -295,7 +283,7 @@ export default defineComponent({
     );
 
     const IndexVal = ref(adkData.value.vlaueDrafts.length - 1);
-    const display = ref(IndexVal.value + 1);
+    const display = ref(IndexVal.value);
     const finalDraftSaved = ref('Draft');
     const success = ref();
 
@@ -403,8 +391,8 @@ export default defineComponent({
       });
       adkData.value.update(() => ({
         isComplete: true,
-        adkIndex: adkIndex
-      }))
+        adkIndex
+      }));
       // IndexVal.value = adkData.value.vlaueDrafts.length - 1;
     }
 
