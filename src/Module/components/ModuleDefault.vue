@@ -131,6 +131,7 @@
           <v-textarea
             v-model="adkData.vlaueDrafts[IndexVal].problem"
             rounded
+            :readonly="userType === 'stakeholder'"
             auto-grow
             :error-messages="errors"
             placeholder="What 'hair on fire' problem or opportunity are you solving for?"
@@ -254,6 +255,13 @@ export default defineComponent({
       required: true,
       type: Object as PropType<MongoDoc | null>,
       default: () => {}
+    },
+    userType: {
+      required: true,
+      type: String
+      // participant: '',
+      // organizer: '',
+      // stakeholder: ''
     }
   },
   setup(props, ctx) {

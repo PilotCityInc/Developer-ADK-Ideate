@@ -37,7 +37,7 @@ export default defineComponent({
       },
       changeStream: {}
     });
-    const userTypeStub = 'organizer';
+    const userTypeStub = 'stakeholder';
     const studentDoc: Ref<MongoDoc> = ref({
       data: {
         adks: []
