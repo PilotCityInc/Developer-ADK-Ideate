@@ -131,7 +131,6 @@
           <v-textarea
             v-model="adkData.vlaueDrafts[IndexVal].problem"
             rounded
-            :readonly="userType === 'stakeholder'"
             auto-grow
             :error-messages="errors"
             placeholder="What 'hair on fire' problem or opportunity are you solving for?"
@@ -140,6 +139,7 @@
             :counter="adkData.maxCharacters"
             :maxlength="adkData.maxCharacters"
             outlined
+            :readonly="(submittedFinal = false) || userType === 'stakeholder'"
             label="Problem or Opportunity"
           ></v-textarea>
         </validation-provider>
@@ -165,7 +165,6 @@
           <v-textarea
             v-model="adkData.vlaueDrafts[IndexVal].innovation"
             rounded
-            :readonly="userType === 'stakeholder'"
             auto-grow
             :error-messages="errors"
             placeholder="What unique value does your solution deliver?"
@@ -174,6 +173,7 @@
             :counter="adkData.maxCharacters"
             :maxlength="adkData.maxCharacters"
             outlined
+            :readonly="(submittedFinal = false) || userType === 'stakeholder'"
             label="Innovation or Unique Value"
           ></v-textarea>
         </validation-provider>
@@ -182,7 +182,6 @@
           <v-textarea
             v-model="adkData.vlaueDrafts[IndexVal].user"
             rounded
-            :readonly="userType === 'stakeholder'"
             auto-grow
             :error-messages="errors"
             placeholder="Identify and describe the user and customer of the solution"
@@ -191,13 +190,22 @@
             :counter="adkData.maxCharacters"
             :maxlength="adkData.maxCharacters"
             outlined
+            :readonly="(submittedFinal = false) || userType === 'stakeholder'"
             label="User or Customer"
           ></v-textarea>
         </validation-provider>
         <br />
         <div class="module-default__row">
           <div>
-            <v-btn rounded x-large outlined depressed @click="draftSave">Save Draft</v-btn>
+            <v-btn
+              :disabled="userType === 'stakeholder'"
+              rounded
+              x-large
+              outlined
+              depressed
+              @click="draftSave"
+              >Save Draft</v-btn
+            >
           </div>
           <!-- <v-alert
             v-if="success == true"
@@ -218,7 +226,14 @@
             Error saving draft. Maybe duplicate data or other reason!
           </v-alert> -->
           <div class="ml-auto">
-            <v-btn :disabled="invalid" x-large rounded color="green" depressed @click="finalDraft">
+            <v-btn
+              :disabled="invalid || userType === 'stakeholder'"
+              x-large
+              rounded
+              color="green"
+              depressed
+              @click="finalDraft"
+            >
               Make Final Draft
             </v-btn>
           </div>
