@@ -131,6 +131,7 @@
           <v-textarea
             v-model="adkData.vlaueDrafts[IndexVal].problem"
             rounded
+            :readonly="userType === 'stakeholder'"
             auto-grow
             :error-messages="errors"
             placeholder="What 'hair on fire' problem or opportunity are you solving for?"
@@ -155,7 +156,7 @@
             :counter="adkData.maxCharacters"
             :maxlength="adkData.maxCharacters"
             outlined
-            :readonly="(submittedFinal = false)"
+            :readonly="(submittedFinal = false) || userType === 'stakeholder'"
             label="Solution or Product"
           ></v-textarea>
         </validation-provider>
@@ -164,6 +165,7 @@
           <v-textarea
             v-model="adkData.vlaueDrafts[IndexVal].innovation"
             rounded
+            :readonly="userType === 'stakeholder'"
             auto-grow
             :error-messages="errors"
             placeholder="What unique value does your solution deliver?"
@@ -180,6 +182,7 @@
           <v-textarea
             v-model="adkData.vlaueDrafts[IndexVal].user"
             rounded
+            :readonly="userType === 'stakeholder'"
             auto-grow
             :error-messages="errors"
             placeholder="Identify and describe the user and customer of the solution"
@@ -254,6 +257,13 @@ export default defineComponent({
       required: true,
       type: Object as PropType<MongoDoc | null>,
       default: () => {}
+    },
+    userType: {
+      required: true,
+      type: String
+      // participant: '',
+      // organizer: '',
+      // stakeholder: ''
     }
   },
   setup(props, ctx) {
@@ -427,6 +437,7 @@ export default defineComponent({
 
     return {
       studentDocument,
+      status: 'true',
       setupInstructions,
       showInstructions: 'true',
       draftSave,
