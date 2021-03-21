@@ -1,9 +1,9 @@
 <template>
   <!-- eslint-disable-next-line vue/no-unused-vars -->
   <ValidationObserver v-slot="{ invalid }" slim>
-    <v-container class="module-default pa-0">
-      <div>
-        <v-expansion-panels v-model="showInstructions" flat>
+    <div>
+      <div class="module-default__instructions">
+        <v-expansion-panels v-model="showInstructions" class="module-default__instructions" flat>
           <v-expansion-panel>
             <v-expansion-panel-header
               v-show="showInstructions"
@@ -46,7 +46,7 @@
         stream
       />
       <div class="pa-6">
-        <div class="module-default__row mb-10">
+        <div class="mb-10">
           <v-menu offset-y>
             <template v-slot:activator="{ on, attrs }">
               <v-btn rounded v-bind="attrs" dark color="green" depressed v-on="on"
@@ -59,8 +59,8 @@
                 v-if="draft > 1"
                 small
                 color="white"
-                class="module__chat-menu-button v-btn__content"
-                tile
+                class=""
+                rounded
                 depressed
                 @click="showDraft(draft)"
               >
@@ -195,7 +195,7 @@
           ></v-textarea>
         </validation-provider>
         <br />
-        <div class="module-default__row">
+        <div class="d-flex flex-row">
           <div>
             <v-btn
               :disabled="userType === 'stakeholder'"
@@ -247,7 +247,7 @@
         <!-- DESIGN YOUR ACTIVITY HERE / COMMENT OUT WHEN YOU'VE STARTED DESIGNING -->
         <!-- <div class="module-default__none">Design your activity here</div> -->
       </div>
-    </v-container>
+    </div>
   </ValidationObserver>
 </template>
 
