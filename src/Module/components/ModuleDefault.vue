@@ -54,7 +54,7 @@
                 {{ finalDraftSaved + ' #' + display }}
               </v-btn>
             </template>
-            <v-card v-for="draft in adkData.vlaueDrafts.length" :key="draft" class="module__menu">
+            <v-card v-for="draft in adkData.valueDrafts.length" :key="draft" class="module__menu">
               <v-btn
                 v-if="draft > 1"
                 small
@@ -65,7 +65,7 @@
                 @click="showDraft(draft)"
               >
                 <v-icon left color="#404142"> mdi-form-select </v-icon>
-                Draft #{{ adkData.vlaueDrafts.length + 1 - draft }}
+                Draft #{{ adkData.valueDrafts.length + 1 - draft }}
               </v-btn>
               <!-- <v-card v-if="indexNum" class="mx-auto" max-width="344" outlined>
                 <v-list-item three-line>
@@ -73,19 +73,19 @@
                     <div class="overline mb-4">Draft #{{ indexNum }} :</div>
                     <v-list-item-title class="headline mb-1">Problem</v-list-item-title>
                     <v-list-item-subtitle>
-                      {{ adkData.vlaueDrafts[indexNum - 1].problem }}
+                      {{ adkData.valueDrafts[indexNum - 1].problem }}
                     </v-list-item-subtitle>
                     <v-list-item-title class="headline mb-1">Solution</v-list-item-title>
                     <v-list-item-subtitle>{{
-                      adkData.vlaueDrafts[indexNum - 1].solution
+                      adkData.valueDrafts[indexNum - 1].solution
                     }}</v-list-item-subtitle>
                     <v-list-item-title class="headline mb-1">Innovation</v-list-item-title>
                     <v-list-item-subtitle>{{
-                      adkData.vlaueDrafts[indexNum - 1].innovation
+                      adkData.valueDrafts[indexNum - 1].innovation
                     }}</v-list-item-subtitle>
                     <v-list-item-title class="headline mb-1">User</v-list-item-title>
                     <v-list-item-subtitle>{{
-                      adkData.vlaueDrafts[indexNum - 1].user
+                      adkData.valueDrafts[indexNum - 1].user
                     }}</v-list-item-subtitle>
                   </v-list-item-content>
                 </v-list-item> -->
@@ -129,7 +129,7 @@
         </div>
         <validation-provider v-slot="{ errors }" slim rules="required">
           <v-textarea
-            v-model="adkData.vlaueDrafts[IndexVal].problem"
+            v-model="adkData.valueDrafts[IndexVal].problem"
             rounded
             auto-grow
             :error-messages="errors"
@@ -139,14 +139,14 @@
             :counter="adkData.maxCharacters"
             :maxlength="adkData.maxCharacters"
             outlined
-            :readonly="(submittedFinal = false) || userType === 'stakeholder'"
+            :readonly="(submittedFinal = false) || readonly"
             label="Problem or Opportunity"
           ></v-textarea>
         </validation-provider>
         <br />
         <validation-provider v-slot="{ errors }" slim rules="required">
           <v-textarea
-            v-model="adkData.vlaueDrafts[IndexVal].solution"
+            v-model="adkData.valueDrafts[IndexVal].solution"
             rounded
             auto-grow
             :error-messages="errors"
@@ -156,14 +156,14 @@
             :counter="adkData.maxCharacters"
             :maxlength="adkData.maxCharacters"
             outlined
-            :readonly="(submittedFinal = false) || userType === 'stakeholder'"
+            :readonly="(submittedFinal = false) || readonly"
             label="Solution or Product"
           ></v-textarea>
         </validation-provider>
         <br />
         <validation-provider v-slot="{ errors }" slim rules="required">
           <v-textarea
-            v-model="adkData.vlaueDrafts[IndexVal].innovation"
+            v-model="adkData.valueDrafts[IndexVal].innovation"
             rounded
             auto-grow
             :error-messages="errors"
@@ -173,14 +173,14 @@
             :counter="adkData.maxCharacters"
             :maxlength="adkData.maxCharacters"
             outlined
-            :readonly="(submittedFinal = false) || userType === 'stakeholder'"
+            :readonly="(submittedFinal = false) || readonly"
             label="Innovation or Unique Value"
           ></v-textarea>
         </validation-provider>
         <br />
         <validation-provider v-slot="{ errors }" slim rules="required">
           <v-textarea
-            v-model="adkData.vlaueDrafts[IndexVal].user"
+            v-model="adkData.valueDrafts[IndexVal].user"
             rounded
             auto-grow
             :error-messages="errors"
@@ -190,20 +190,14 @@
             :counter="adkData.maxCharacters"
             :maxlength="adkData.maxCharacters"
             outlined
-            :readonly="(submittedFinal = false) || userType === 'stakeholder'"
+            :readonly="(submittedFinal = false) || readonly"
             label="User or Customer"
           ></v-textarea>
         </validation-provider>
         <br />
         <div class="d-flex flex-row">
           <div>
-            <v-btn
-              :disabled="userType === 'stakeholder'"
-              rounded
-              x-large
-              outlined
-              depressed
-              @click="draftSave"
+            <v-btn :disabled="readonly" rounded x-large outlined depressed @click="draftSave"
               >Save Draft</v-btn
             >
           </div>
@@ -227,7 +221,7 @@
           </v-alert> -->
           <div class="ml-auto">
             <v-btn
-              :disabled="invalid || userType === 'stakeholder'"
+              :disabled="invalid || readonly"
               x-large
               rounded
               color="green"
@@ -253,7 +247,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType, ref } from '@vue/composition-api';
-import { getModAdk, getModMongoDoc } from 'pcv4lib/src';
+import { getModAdk } from 'pcv4lib/src';
 import Swal from 'sweetalert2';
 import Instruct from './ModuleInstruct.vue';
 import MongoDoc from '../types';
@@ -264,10 +258,6 @@ export default defineComponent({
     Instruct
   },
   props: {
-    value: {
-      required: true,
-      type: Object as PropType<MongoDoc>
-    },
     userType: {
       required: true,
       type: String
@@ -275,17 +265,19 @@ export default defineComponent({
       // organizer: '',
       // stakeholder: ''
     },
-    studentDoc: {
+    teamDoc: {
       required: true,
-      type: Object as PropType<MongoDoc | null>,
+      type: Object as PropType<MongoDoc>,
       default: () => {}
+    },
+    readonly: {
+      required: false,
+      default: false
     }
   },
   setup(props, ctx) {
-    const studentDocument = getModMongoDoc(props, ctx.emit, {}, 'studentDoc', 'inputStudentDoc');
-
     const initIdeateDefault = {
-      vlaueDrafts: [
+      valueDrafts: [
         {
           problem: '',
           solution: '',
@@ -303,36 +295,36 @@ export default defineComponent({
       ctx.emit,
       'Ideate',
       initIdeateDefault,
-      'studentDoc',
-      'inputStudentDoc'
+      'teamDoc',
+      'inputTeamDoc'
     );
 
-    const IndexVal = ref(adkData.value.vlaueDrafts.length - 1);
+    const IndexVal = ref(adkData.value.valueDrafts.length - 1);
     const display = ref(IndexVal.value);
     const finalDraftSaved = ref('Draft');
     const success = ref();
 
     function draftSave() {
-      const draftNum = adkData.value.vlaueDrafts.length - 1;
+      const draftNum = adkData.value.valueDrafts.length - 1;
       const draft = ref({
-        problem: adkData.value.vlaueDrafts[IndexVal.value].problem,
-        solution: adkData.value.vlaueDrafts[IndexVal.value].solution,
-        innovation: adkData.value.vlaueDrafts[IndexVal.value].innovation,
-        user: adkData.value.vlaueDrafts[IndexVal.value].user,
+        problem: adkData.value.valueDrafts[IndexVal.value].problem,
+        solution: adkData.value.valueDrafts[IndexVal.value].solution,
+        innovation: adkData.value.valueDrafts[IndexVal.value].innovation,
+        user: adkData.value.valueDrafts[IndexVal.value].user,
         finalDraft: false,
         draftIndex: IndexVal.value + 1
         // index: ''
       });
       if (
-        adkData.value.vlaueDrafts[draftNum].problem.length !== 0 ||
-        adkData.value.vlaueDrafts[draftNum].solution.length !== 0 ||
-        adkData.value.vlaueDrafts[draftNum].innovation.length !== 0 ||
-        adkData.value.vlaueDrafts[draftNum].user.length !== 0
+        adkData.value.valueDrafts[draftNum].problem.length !== 0 ||
+        adkData.value.valueDrafts[draftNum].solution.length !== 0 ||
+        adkData.value.valueDrafts[draftNum].innovation.length !== 0 ||
+        adkData.value.valueDrafts[draftNum].user.length !== 0
       ) {
-        if (adkData.value.vlaueDrafts.length - 1 <= 0) {
-          adkData.value.vlaueDrafts.push(draft.value);
+        if (adkData.value.valueDrafts.length - 1 <= 0) {
+          adkData.value.valueDrafts.push(draft.value);
           // console.log('draft saved, first draft');
-          // console.log(adkData.value.vlaueDrafts);
+          // console.log(adkData.value.valueDrafts);
           // eslint-disable-next-line no-plusplus
           IndexVal.value++;
           // eslint-disable-next-line no-plusplus
@@ -340,24 +332,24 @@ export default defineComponent({
           console.log(display.value);
           success.value = true;
           Swal.fire({
-            type: 'success',
+            icon: 'success',
             title: 'Success!',
             text: 'Your draft has been successfully saved!'
           });
-        } else if (adkData.value.vlaueDrafts.length - IndexVal.value === 2) {
+        } else if (adkData.value.valueDrafts.length - IndexVal.value === 2) {
           console.log('first item');
         } else if (
-          adkData.value.vlaueDrafts[draftNum].problem !==
-            adkData.value.vlaueDrafts[draftNum - 1].problem ||
-          adkData.value.vlaueDrafts[draftNum].solution !==
-            adkData.value.vlaueDrafts[draftNum - 1].solution ||
-          adkData.value.vlaueDrafts[draftNum].innovation !==
-            adkData.value.vlaueDrafts[draftNum - 1].innovation ||
-          adkData.value.vlaueDrafts[draftNum].user !== adkData.value.vlaueDrafts[draftNum - 1].user
+          adkData.value.valueDrafts[draftNum].problem !==
+            adkData.value.valueDrafts[draftNum - 1].problem ||
+          adkData.value.valueDrafts[draftNum].solution !==
+            adkData.value.valueDrafts[draftNum - 1].solution ||
+          adkData.value.valueDrafts[draftNum].innovation !==
+            adkData.value.valueDrafts[draftNum - 1].innovation ||
+          adkData.value.valueDrafts[draftNum].user !== adkData.value.valueDrafts[draftNum - 1].user
         ) {
-          adkData.value.vlaueDrafts.push(draft.value);
+          adkData.value.valueDrafts.push(draft.value);
           // console.log('draft saved');
-          // console.log(adkData.value.vlaueDrafts);
+          // console.log(adkData.value.valueDrafts);
           success.value = true;
           // eslint-disable-next-line no-plusplus
           IndexVal.value++;
@@ -365,7 +357,7 @@ export default defineComponent({
           display.value++;
           console.log(display.value);
           Swal.fire({
-            type: 'success',
+            icon: 'success',
             title: 'Success!',
             text: 'Your draft has been successfully saved!'
           });
@@ -373,14 +365,14 @@ export default defineComponent({
           // console.log('duplicate data');
           // success = false;
           Swal.fire({
-            type: 'success',
+            icon: 'success',
             title: 'Success!',
             text: 'Your draft has been successfully saved!'
           });
         }
       } else {
         Swal.fire({
-          type: 'error',
+          icon: 'error',
           title: 'Oops...',
           text: 'You forgot to write something in!'
           // footer: 'asd'
@@ -393,32 +385,32 @@ export default defineComponent({
     function finalDraft() {
       // console.log('saved final draft');
 
-      // console.log(adkData.value.vlaueDrafts[IndexVal.value].finalDraft);
+      // console.log(adkData.value.valueDrafts[IndexVal.value].finalDraft);
       // const submittedFinal = true;
-      adkData.value.vlaueDrafts[IndexVal.value].draftIndex = IndexVal.value;
-      // console.log(adkData.value.vlaueDrafts[IndexVal.value].draftIndex);
-      adkData.value.vlaueDrafts.splice(
-        adkData.value.vlaueDrafts.length - 1,
+      adkData.value.valueDrafts[IndexVal.value].draftIndex = IndexVal.value;
+      // console.log(adkData.value.valueDrafts[IndexVal.value].draftIndex);
+      adkData.value.valueDrafts.splice(
+        adkData.value.valueDrafts.length - 1,
         0,
-        adkData.value.vlaueDrafts[IndexVal.value]
+        adkData.value.valueDrafts[IndexVal.value]
       );
-      adkData.value.vlaueDrafts[adkData.value.vlaueDrafts.length - 1].finalDraft = true;
-      // console.log(adkData.value.vlaueDrafts[adkData.value.vlaueDrafts.length - 1].finalDraft);
-      // adkData.value.vlaueDrafts.push(draft.value);
-      // console.log(adkData.value.vlaueDrafts);
+      adkData.value.valueDrafts[adkData.value.valueDrafts.length - 1].finalDraft = true;
+      // console.log(adkData.value.valueDrafts[adkData.value.valueDrafts.length - 1].finalDraft);
+      // adkData.value.valueDrafts.push(draft.value);
+      // console.log(adkData.value.valueDrafts);
       finalDraftSaved.value = 'Final: Draft';
       display.value = IndexVal.value + 1;
       console.log(display.value);
       Swal.fire({
-        type: 'success',
+        icon: 'success',
         title: 'Success!',
         text: 'Successfully marked as final draft!'
       });
-      adkData.value.update(() => ({
+      props.teamDoc.update(() => ({
         isComplete: true,
         adkIndex
       }));
-      // IndexVal.value = adkData.value.vlaueDrafts.length - 1;
+      // IndexVal.value = adkData.value.valueDrafts.length - 1;
     }
 
     function showDraft(draft: number) {
@@ -428,14 +420,13 @@ export default defineComponent({
       //   return draftIndex;
       //   // IndexVal.value = draftIndex;
       // }
-      // console.log(adkData.value.vlaueDrafts[draftIndex - 1].innovation);
+      // console.log(adkData.value.valueDrafts[draftIndex - 1].innovation);
       // eslint-disable-next-line operator-assignment
-      IndexVal.value = adkData.value.vlaueDrafts.length - draft;
+      IndexVal.value = adkData.value.valueDrafts.length - draft;
       display.value = IndexVal.value + 1;
-      console.log(display.value);
       // console.log(IndexVal.value);
-      // console.log(adkData.value.vlaueDrafts[IndexVal.value].finalDraft);
-      if (adkData.value.vlaueDrafts[IndexVal.value + 1].finalDraft === true) {
+      // console.log(adkData.value.valueDrafts[IndexVal.value].finalDraft);
+      if (adkData.value.valueDrafts[IndexVal.value + 1].finalDraft === true) {
         finalDraftSaved.value = 'Final: Draft';
         // console.log('this is a final draft');
       } else {
@@ -451,7 +442,6 @@ export default defineComponent({
     });
 
     return {
-      studentDocument,
       status: 'true',
       setupInstructions,
       showInstructions: 'true',
@@ -459,7 +449,6 @@ export default defineComponent({
       IndexVal,
       finalDraft,
       showDraft,
-      // draftNum,
       finalDraftSaved,
       indexNum,
       finalDraftIndex,
@@ -468,25 +457,6 @@ export default defineComponent({
       success
     };
   }
-  // setup() {
-  //   const questionAns = reactive({
-  //     problem: '',
-  //     solution: '',
-  //     innovation: '',
-  //     user: ''
-  //   });
-
-  //   const setupInstructions = ref({
-  //     description: '',
-  //     instructions: ['', '', '']
-  //   });
-  //   const showInstructions = ref(true);
-  //   return {
-  //     setupInstructions,
-  //     showInstructions,
-  //     ...toRefs(questionAns)
-  //   };
-  // }
 });
 </script>
 

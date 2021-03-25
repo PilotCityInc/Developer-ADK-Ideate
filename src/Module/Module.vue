@@ -104,10 +104,9 @@
           <keep-alive>
             <component
               :is="getComponent"
-              v-model="studentDoc"
-              :student-doc="studentDoc"
+              :team-doc="teamDoc || { data: { adks: [] } }"
               :user-type="userType"
-              @inputStudentDoc="$emit('inputStudentDoc', $event)"
+              :readonly="readonly"
             />
           </keep-alive>
         </div>
@@ -268,7 +267,6 @@ body {
 <script lang="ts">
 import { computed, reactive, ref, toRefs, defineComponent, PropType } from '@vue/composition-api';
 import '../styles/module.scss';
-import { getModMongoDoc } from 'pcv4lib/src';
 import * as Module from './components';
 import MongoDoc from './types';
 
@@ -281,11 +279,7 @@ export default defineComponent({
     'module-preview': Module.Default
   },
   props: {
-    value: {
-      required: true,
-      type: Object as PropType<MongoDoc>
-    },
-    studentDoc: {
+    teamDoc: {
       required: true,
       type: Object as PropType<MongoDoc | null>,
       default: () => {}
@@ -296,6 +290,10 @@ export default defineComponent({
       // participant: '',
       // organizer: '',
       // stakeholder: ''
+    },
+    readonly: {
+      required: false,
+      default: false
     }
   },
 
@@ -304,13 +302,12 @@ export default defineComponent({
   //   type: String
   // }
   //   },
-  setup(props, ctx) {
+  setup(props) {
     //
     // props.programCollection.findOne({
     //   _id: props.programId
     // });
     // ENTER ACTIVITY NAME BELOW
-    const studentDocument = getModMongoDoc(props, ctx.emit, {}, 'studentDoc', 'inputStudentDoc');
 
     const moduleName = ref('Ideate');
     const page = reactive({
@@ -379,8 +376,7 @@ export default defineComponent({
       getColor,
       ...toRefs(timelineData),
       timeline,
-      comment,
-      studentDocument
+      comment
     };
   }
 });

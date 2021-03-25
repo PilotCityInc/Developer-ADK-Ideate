@@ -12664,10 +12664,10 @@ pbkdf2@^3.0.3:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
-pcv4lib@^1.0.12:
-  version "1.0.12"
-  resolved "https://registry.yarnpkg.com/pcv4lib/-/pcv4lib-1.0.12.tgz#693523e1a983a821b526f59fc531d07720e0b95e"
-  integrity sha512-s7U3Q4YUc+fU4DUFGZ9HDoZ5prwxxkx/V/rPIsiP23wUfNsQm2Dt8YaPca0YV7z8n6tbewEtKR2UhtiWG50z4w==
+pcv4lib@^1.0.13:
+  version "1.0.13"
+  resolved "https://registry.yarnpkg.com/pcv4lib/-/pcv4lib-1.0.13.tgz#eefc2dcb2842b4285ac478777da1338a60f17693"
+  integrity sha512-RwymbIuNoao26xNss7wVKuSajU28EqfaARS+wG9rp7yNVQprmbcKu1ke+XDdwv2/5EOUcPealPjSkSKcjgubZg==
 
 pend@~1.2.0:
   version "1.2.0"
@@ -15202,7 +15202,7 @@ svgo@^1.0.0:
     unquote "~1.1.1"
     util.promisify "~1.0.0"
 
-sweetalert2@^10.15.5:
+sweetalert2@^10.15.6:
   version "10.15.6"
   resolved "https://registry.yarnpkg.com/sweetalert2/-/sweetalert2-10.15.6.tgz#8fe309af76543f7d8151a2e57a226f1cceb51a4e"
   integrity sha512-elLyVvVwBBsgkT0NrxiiVuEv077gqGhm7WEdBjXRHN+TOX+MoC4LpDW2kbdSeJtjjU1sPdqGKfGLoJElIXfVWA==
