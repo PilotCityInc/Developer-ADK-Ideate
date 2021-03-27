@@ -49,23 +49,23 @@
         <div class="mb-10">
           <v-menu offset-y>
             <template v-slot:activator="{ on, attrs }">
-              <v-btn small rounded v-bind="attrs" dark color="green" depressed v-on="on"
+              <v-btn class="font-weight-bold" rounded v-bind="attrs" dark depressed v-on="on"
                 ><v-icon left>mdi-form-select</v-icon>
-                {{ finalDraftSaved + ' #' + display }}
+                {{ finalDraftSaved + ' # ' + display }}
               </v-btn>
             </template>
             <v-card v-for="draft in adkData.valueDrafts.length" :key="draft" class="module__menu">
               <v-btn
                 v-if="draft > 1"
-                small
-                color="white"
-                class=""
-                rounded
+                outlined
+                class="mt-2 mb-1"
+                width="100%"
                 depressed
+                rounded
                 @click="showDraft(draft)"
               >
-                <v-icon left color="#404142"> mdi-form-select </v-icon>
-                Draft #{{ adkData.valueDrafts.length + 1 - draft }}
+                <v-icon left> mdi-form-select </v-icon>
+                Draft # {{ adkData.valueDrafts.length + 1 - draft }}
               </v-btn>
               <!-- <v-card v-if="indexNum" class="mx-auto" max-width="344" outlined>
                 <v-list-item three-line>
@@ -224,7 +224,8 @@
               :disabled="invalid || readonly"
               x-large
               rounded
-              color="green"
+              dark
+              class="font-weight-bold"
               depressed
               @click="finalDraft"
             >
@@ -333,8 +334,8 @@ export default defineComponent({
           success.value = true;
           Swal.fire({
             icon: 'success',
-            title: 'Success!',
-            text: 'Your draft has been successfully saved!'
+            title: 'Draft saved',
+            text: ''
           });
         } else if (adkData.value.valueDrafts.length - IndexVal.value === 2) {
           console.log('first item');
@@ -358,16 +359,16 @@ export default defineComponent({
           console.log(display.value);
           Swal.fire({
             icon: 'success',
-            title: 'Success!',
-            text: 'Your draft has been successfully saved!'
+            title: 'Final draft saved',
+            text: ''
           });
         } else {
           // console.log('duplicate data');
           // success = false;
           Swal.fire({
             icon: 'success',
-            title: 'Success!',
-            text: 'Your draft has been successfully saved!'
+            title: 'Draft saved',
+            text: ''
           });
         }
       } else {
@@ -398,13 +399,13 @@ export default defineComponent({
       // console.log(adkData.value.valueDrafts[adkData.value.valueDrafts.length - 1].finalDraft);
       // adkData.value.valueDrafts.push(draft.value);
       // console.log(adkData.value.valueDrafts);
-      finalDraftSaved.value = 'Final: Draft';
+      finalDraftSaved.value = 'Final Draft';
       display.value = IndexVal.value + 1;
       console.log(display.value);
       Swal.fire({
         icon: 'success',
-        title: 'Success!',
-        text: 'Successfully marked as final draft!'
+        title: 'Final draft saved',
+        text: ''
       });
       props.teamDoc.update(() => ({
         isComplete: true,
@@ -427,7 +428,7 @@ export default defineComponent({
       // console.log(IndexVal.value);
       // console.log(adkData.value.valueDrafts[IndexVal.value].finalDraft);
       if (adkData.value.valueDrafts[IndexVal.value + 1].finalDraft === true) {
-        finalDraftSaved.value = 'Final: Draft';
+        finalDraftSaved.value = 'Final Draft';
         // console.log('this is a final draft');
       } else {
         finalDraftSaved.value = 'Draft';
@@ -461,6 +462,13 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
+.swal2-styled.swal2-confirm {
+  background-color: #404142;
+}
+.v-menu__content {
+  box-shadow: none;
+}
+
 .module-default {
   &__row {
     flex-direction: row;
