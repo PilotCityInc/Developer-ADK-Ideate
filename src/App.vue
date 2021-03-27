@@ -52,7 +52,7 @@ export default defineComponent({
       },
       changeStream: {}
     });
-    const userTypeStub = 'stakeholder';
+    const userTypeStub = 'participant';
     if (userTypeStub === 'organizer') teamDoc.value = null;
     const readonly = ref(userTypeStub === 'stakeholder');
 
