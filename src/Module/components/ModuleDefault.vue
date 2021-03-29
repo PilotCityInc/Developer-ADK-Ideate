@@ -305,7 +305,7 @@ export default defineComponent({
     const finalDraftSaved = ref('Draft');
     const success = ref();
 
-    function draftSave() {
+    async function draftSave() {
       const draftNum = adkData.value.valueDrafts.length - 1;
       const draft = ref({
         problem: adkData.value.valueDrafts[IndexVal.value].problem,
@@ -332,6 +332,7 @@ export default defineComponent({
           display.value++;
           console.log(display.value);
           success.value = true;
+          await props.teamDoc.update();
           Swal.fire({
             icon: 'success',
             title: 'Draft saved',
@@ -357,6 +358,11 @@ export default defineComponent({
           // eslint-disable-next-line no-plusplus
           display.value++;
           console.log(display.value);
+          await props.teamDoc.update(() => ({
+            isComplete: true,
+            adkIndex
+          }));
+
           Swal.fire({
             icon: 'success',
             title: 'Final draft saved',
