@@ -253,6 +253,7 @@ import { getModAdk } from 'pcv4lib/src';
 import Swal from 'sweetalert2';
 import Instruct from './ModuleInstruct.vue';
 import MongoDoc from '../types';
+import { maxCharacters } from './const';
 
 export default defineComponent({
   name: 'ModuleDefault',
@@ -462,7 +463,8 @@ export default defineComponent({
       finalDraftIndex,
       display,
       adkData,
-      success
+      success,
+      maxCharacters
     };
   }
 });

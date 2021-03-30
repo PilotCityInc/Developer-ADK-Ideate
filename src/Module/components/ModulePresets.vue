@@ -10,7 +10,7 @@
 
         <validation-provider v-slot="{ errors }" slim rules="numeric|required">
           <v-select
-            v-model="adkData.maxCharacters"
+            v-model="adkData.value.maxCharacters"
             :items="maxCharacters"
             :error-messages="errors"
             outlined
@@ -195,7 +195,7 @@ export default defineComponent({
     });
 
     // function minuteCheck() {
-    // console.log(programDoc.data.adks[index].maxCharacters);
+    //   console.log(programDoc.data.adks[index].maxCharacters);
     // }
 
     const setupInstructions = ref({
