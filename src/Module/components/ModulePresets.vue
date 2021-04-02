@@ -187,7 +187,7 @@ export default defineComponent({
     });
 
     // function minuteCheck() {
-    // console.log(programDoc.data.adks[index].maxCharacters);
+    //   console.log(programDoc.data.adks[index].maxCharacters);
     // }
 
     const setupInstructions = ref({
