@@ -104,8 +104,10 @@
           <keep-alive>
             <component
               :is="getComponent"
-              :team-doc="teamDoc || { data: { adks: [] } }"
+              v-model="programDoc"
+              :user-doc="userDoc"
               :user-type="userType"
+              :team-doc="teamDoc || { data: { adks: [] } }"
               :readonly="readonly"
             />
           </keep-alive>
@@ -265,9 +267,10 @@ body {
 }
 </style>
 <script lang="ts">
-import { computed, reactive, ref, toRefs, defineComponent } from '@vue/composition-api';
+import { computed, reactive, ref, toRefs, defineComponent, PropType } from '@vue/composition-api';
 import '../styles/module.scss';
 import * as Module from './components';
+import MongoDoc from './types';
 
 export default defineComponent({
   name: 'ModuleName',
@@ -278,8 +281,19 @@ export default defineComponent({
     'module-preview': Module.Default
   },
   props: {
+    value: {
+      required: true,
+      type: Object as PropType<MongoDoc>
+    },
+    userDoc: {
+      required: true,
+      type: Object as PropType<MongoDoc | null>,
+      default: () => {}
+    },
     teamDoc: {
-      required: true
+      required: false,
+      type: Object as PropType<MongoDoc | null>,
+      default: () => {}
     },
     userType: {
       required: true,
@@ -294,17 +308,28 @@ export default defineComponent({
     }
   },
 
-  // programId: {
-  //   require: true,
-  //   type: String
-  // }
-  //   },
-  setup(props) {
+  setup(props, ctx) {
     //
     // props.programCollection.findOne({
     //   _id: props.programId
     // });
     // ENTER ACTIVITY NAME BELOW
+    const programDoc = computed({
+      get: () => props.value,
+      set: newVal => {
+        ctx.emit('input', newVal);
+      }
+    });
+
+    const index = programDoc.value.data.adks.findIndex(function findOfferObj(obj) {
+      return obj.name === 'ideate';
+    });
+    if (index === -1) {
+      const initIdeate = {
+        name: 'ideate'
+      };
+      programDoc.value.data.adks.push(initIdeate);
+    }
 
     const moduleName = ref('Ideate');
     const page = reactive({
@@ -373,7 +398,8 @@ export default defineComponent({
       getColor,
       ...toRefs(timelineData),
       timeline,
-      comment
+      comment,
+      programDoc
     };
   }
 });

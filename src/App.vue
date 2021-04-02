@@ -2,9 +2,9 @@
   <v-app>
     <Module
       v-model="programDocStub"
-      :user-type="userTypeStub"
+      :user-doc="userDoc"
       :team-doc="teamDoc"
-      :readonly="readonly"
+      :user-type="userTypeStub"
       @inputTeamDoc="teamDoc = $event"
     />
   </v-app>
@@ -13,6 +13,7 @@
 <script lang="ts">
 // import ApolloExample from './components/ApolloExample.vue';
 import { defineComponent, Ref, ref } from '@vue/composition-api';
+import { ObjectId } from 'bson';
 import Module from './Module/Module.vue';
 import MongoDoc from './Module/types';
 
@@ -52,15 +53,33 @@ export default defineComponent({
       },
       changeStream: {}
     });
+    const userDoc: Ref<MongoDoc> = ref({
+      data: {
+        _id: new ObjectId(),
+        firstName: 'Test First',
+        lastName: 'Test Last',
+        adks: []
+      },
+      update: () => {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            resolve(true);
+            // reject(new Error('REJECTED'));
+          }, 3000);
+        });
+      },
+      changeStream: {}
+    });
     const userTypeStub = 'organizer';
-    if (userTypeStub === 'organizer') teamDoc.value = null;
+    // if (userTypeStub === 'organizer') teamDoc.value = null;
     const readonly = ref(userTypeStub === 'stakeholder');
 
     return {
       programDocStub,
-      userTypeStub,
+      userDoc,
       teamDoc,
-      readonly
+      readonly,
+      userTypeStub
     };
   }
 });

@@ -10,7 +10,7 @@
 
         <validation-provider v-slot="{ errors }" slim rules="numeric|required">
           <v-select
-            v-model="adkData.maxCharacters"
+            v-model="programDoc.data.adks[index].maxCharacters"
             :items="maxCharacters"
             :error-messages="errors"
             outlined
@@ -27,7 +27,7 @@
               outlined
               depressed
               :loading="loading"
-              @click="process()"
+              @click="process"
               >Save</v-btn
             >
           </div>
@@ -142,26 +142,21 @@ export default defineComponent({
     value: {
       required: true,
       type: Object as PropType<MongoDoc>
-    },
-    studentDoc: {
-      required: true,
-      type: Object as PropType<MongoDoc | null>,
-      default: () => {}
     }
   },
 
   setup(props, ctx) {
-    const studentDocument = getModMongoDoc(props, ctx.emit, {}, 'studentDoc', 'inputStudentDoc');
-    // const programDoc = computed({
-    //   get: () => props.value,
-    //   set: newVal => {
-    //     ctx.emit('input', newVal);
-    //   }
-    // });
+    // const studentDocument = getModMongoDoc(props, ctx.emit, {}, 'studentDoc', 'inputStudentDoc');
+    const programDoc = computed({
+      get: () => props.value,
+      set: newVal => {
+        ctx.emit('input', newVal);
+      }
+    });
 
-    // const index = programDoc.value.data.adks.findIndex(function findIdeateObj(obj) {
-    //   return obj.name === 'ideate';
-    // });
+    const index = programDoc.value.data.adks.findIndex(function findIdeateObj(obj) {
+      return obj.name === 'ideate';
+    });
 
     // // const presetsInstructions = ref({
     // //   description: '',
@@ -177,15 +172,12 @@ export default defineComponent({
         required: false
       }
     };
-    const { adkData } = getModAdk(
-      props,
-      ctx.emit,
-      'Ideate',
-      initIdeatePresets,
-      'studentDoc',
-      'inputStudentDoc'
-    );
+    programDoc.value.data.adks[index] = {
+      ...initIdeatePresets,
+      ...programDoc.value.data.adks[index]
+    };
 
+    console.log(programDoc.value.data.adks[index]);
     const presets = reactive({
       group,
       required,
@@ -206,12 +198,23 @@ export default defineComponent({
     // console.log(programDoc);
     // console.log(adkData.value.maxCharacters);
 
+    function save() {
+      console.log(programDoc.value.data.adks[index].maxCharacters);
+      return new Promise((resolve, reject) => {
+        programDoc.value.update();
+
+        resolve(true);
+      });
+    }
+
     return {
-      studentDocument,
-      ...loading(studentDocument.value.update, 'Saved Successfully', 'Could not save at this time'),
+      programDoc,
+      ...loading(save, 'Saved Successfully', 'Could not save at this time'),
       ...toRefs(presets),
       setupInstructions,
-      adkData
+      index,
+      save
+      // adkData
       // index
     };
   }

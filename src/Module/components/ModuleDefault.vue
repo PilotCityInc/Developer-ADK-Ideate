@@ -129,15 +129,15 @@
         </div>
         <validation-provider v-slot="{ errors }" slim rules="required">
           <v-textarea
-            v-model="adkData.valueDrafts[IndexVal].problem"
+            v-model="problem"
             rounded
             auto-grow
             :error-messages="errors"
             placeholder="What 'hair on fire' problem or opportunity are you solving for?"
             prepend-inner-icon="mdi-fire"
             class="module-default__textarea"
-            :counter="adkData.maxCharacters"
-            :maxlength="adkData.maxCharacters"
+            :counter="programDoc.data.adks[index].maxCharacters"
+            :maxlength="programDoc.data.adks[index].maxCharacters"
             outlined
             :readonly="(submittedFinal = false) || readonly"
             label="Problem or Opportunity"
@@ -146,15 +146,15 @@
         <br />
         <validation-provider v-slot="{ errors }" slim rules="required">
           <v-textarea
-            v-model="adkData.valueDrafts[IndexVal].solution"
+            v-model="solution"
             rounded
             auto-grow
             :error-messages="errors"
             placeholder="What bright idea do you have as a solution?"
             prepend-inner-icon="mdi-head-snowflake"
             class="module-default__textarea"
-            :counter="adkData.maxCharacters"
-            :maxlength="adkData.maxCharacters"
+            :counter="programDoc.data.adks[index].maxCharacters"
+            :maxlength="programDoc.data.adks[index].maxCharacters"
             outlined
             :readonly="(submittedFinal = false) || readonly"
             label="Solution or Product"
@@ -163,15 +163,15 @@
         <br />
         <validation-provider v-slot="{ errors }" slim rules="required">
           <v-textarea
-            v-model="adkData.valueDrafts[IndexVal].innovation"
+            v-model="innovation"
             rounded
             auto-grow
             :error-messages="errors"
             placeholder="What unique value does your solution deliver?"
             prepend-inner-icon="mdi-lightning-bolt"
             class="module-default__textarea"
-            :counter="adkData.maxCharacters"
-            :maxlength="adkData.maxCharacters"
+            :counter="programDoc.data.adks[index].maxCharacters"
+            :maxlength="programDoc.data.adks[index].maxCharacters"
             outlined
             :readonly="(submittedFinal = false) || readonly"
             label="Innovation or Unique Value"
@@ -180,15 +180,15 @@
         <br />
         <validation-provider v-slot="{ errors }" slim rules="required">
           <v-textarea
-            v-model="adkData.valueDrafts[IndexVal].user"
+            v-model="user"
             rounded
             auto-grow
             :error-messages="errors"
             placeholder="Identify and describe the user and customer of the solution"
             prepend-inner-icon="mdi-account-group"
             class="module-default__textarea"
-            :counter="adkData.maxCharacters"
-            :maxlength="adkData.maxCharacters"
+            :counter="programDoc.data.adks[index].maxCharacters"
+            :maxlength="programDoc.data.adks[index].maxCharacters"
             outlined
             :readonly="(submittedFinal = false) || readonly"
             label="User or Customer"
@@ -247,7 +247,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref } from '@vue/composition-api';
+import { defineComponent, PropType, ref, computed } from '@vue/composition-api';
 import { getModAdk } from 'pcv4lib/src';
 import Swal from 'sweetalert2';
 import Instruct from './ModuleInstruct.vue';
@@ -259,6 +259,10 @@ export default defineComponent({
     Instruct
   },
   props: {
+    value: {
+      required: true,
+      type: Object as PropType<MongoDoc>
+    },
     userType: {
       required: true,
       type: String
@@ -277,18 +281,19 @@ export default defineComponent({
     }
   },
   setup(props, ctx) {
+    const programDoc = computed({
+      get: () => props.value,
+      set: newVal => {
+        ctx.emit('input', newVal);
+      }
+    });
+
+    const index = programDoc.value.data.adks.findIndex(function findOfferObj(obj) {
+      return obj.name === 'ideate';
+    });
+
     const initIdeateDefault = {
-      valueDrafts: [
-        {
-          problem: '',
-          solution: '',
-          innovation: '',
-          user: '',
-          finalDraft: false,
-          draftIndex: '0'
-          // draftIndex: ''
-        }
-      ]
+      valueDrafts: []
     };
 
     const { adkData, adkIndex } = getModAdk(
@@ -303,24 +308,29 @@ export default defineComponent({
     const IndexVal = ref(adkData.value.valueDrafts.length - 1);
     const display = ref(IndexVal.value);
     const finalDraftSaved = ref('Draft');
-    const success = ref();
+    // const success = ref();
+
+    const problem = ref('');
+    const solution = ref('');
+    const innovation = ref('');
+    const user = ref('');
 
     function draftSave() {
       const draftNum = adkData.value.valueDrafts.length - 1;
       const draft = ref({
-        problem: adkData.value.valueDrafts[IndexVal.value].problem,
-        solution: adkData.value.valueDrafts[IndexVal.value].solution,
-        innovation: adkData.value.valueDrafts[IndexVal.value].innovation,
-        user: adkData.value.valueDrafts[IndexVal.value].user,
+        problem: problem.value,
+        solution: solution.value,
+        innovation: innovation.value,
+        user: user.value,
         finalDraft: false,
         draftIndex: IndexVal.value + 1
         // index: ''
       });
       if (
-        adkData.value.valueDrafts[draftNum].problem.length !== 0 ||
-        adkData.value.valueDrafts[draftNum].solution.length !== 0 ||
-        adkData.value.valueDrafts[draftNum].innovation.length !== 0 ||
-        adkData.value.valueDrafts[draftNum].user.length !== 0
+        problem.value.length !== 0 ||
+        solution.value.length !== 0 ||
+        innovation.value.length !== 0 ||
+        user.value.length !== 0
       ) {
         if (adkData.value.valueDrafts.length - 1 <= 0) {
           adkData.value.valueDrafts.push(draft.value);
@@ -331,34 +341,35 @@ export default defineComponent({
           // eslint-disable-next-line no-plusplus
           display.value++;
           console.log(display.value);
-          success.value = true;
+          // success.value = true;
           Swal.fire({
-            icon: 'success',
+            type: 'success',
             title: 'Draft saved',
             text: ''
           });
+          // problem.value = '';
+          // solution.value = '';
+          // innovation.value = '';
+          // user.value = '';
         } else if (adkData.value.valueDrafts.length - IndexVal.value === 2) {
           console.log('first item');
         } else if (
-          adkData.value.valueDrafts[draftNum].problem !==
-            adkData.value.valueDrafts[draftNum - 1].problem ||
-          adkData.value.valueDrafts[draftNum].solution !==
-            adkData.value.valueDrafts[draftNum - 1].solution ||
-          adkData.value.valueDrafts[draftNum].innovation !==
-            adkData.value.valueDrafts[draftNum - 1].innovation ||
-          adkData.value.valueDrafts[draftNum].user !== adkData.value.valueDrafts[draftNum - 1].user
+          problem.value !== adkData.value.valueDrafts[draftNum - 1].problem ||
+          solution.value !== adkData.value.valueDrafts[draftNum - 1].solution ||
+          innovation.value !== adkData.value.valueDrafts[draftNum - 1].innovation ||
+          user.value !== adkData.value.valueDrafts[draftNum - 1].user
         ) {
           adkData.value.valueDrafts.push(draft.value);
           // console.log('draft saved');
           // console.log(adkData.value.valueDrafts);
-          success.value = true;
+          // success.value = true;
           // eslint-disable-next-line no-plusplus
           IndexVal.value++;
           // eslint-disable-next-line no-plusplus
           display.value++;
           console.log(display.value);
           Swal.fire({
-            icon: 'success',
+            type: 'success',
             title: 'Final draft saved',
             text: ''
           });
@@ -366,14 +377,14 @@ export default defineComponent({
           // console.log('duplicate data');
           // success = false;
           Swal.fire({
-            icon: 'success',
+            type: 'success',
             title: 'Draft saved',
             text: ''
           });
         }
       } else {
         Swal.fire({
-          icon: 'error',
+          type: 'error',
           title: 'Oops...',
           text: 'You forgot to write something in!'
           // footer: 'asd'
@@ -403,7 +414,7 @@ export default defineComponent({
       display.value = IndexVal.value + 1;
       console.log(display.value);
       Swal.fire({
-        icon: 'success',
+        type: 'success',
         title: 'Final draft saved',
         text: ''
       });
@@ -455,7 +466,13 @@ export default defineComponent({
       finalDraftIndex,
       display,
       adkData,
-      success
+      // success,
+      problem,
+      solution,
+      innovation,
+      user,
+      programDoc,
+      index
     };
   }
 });
