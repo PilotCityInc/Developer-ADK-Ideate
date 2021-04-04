@@ -47,7 +47,7 @@
       />
       <div class="pa-6">
         <div class="mb-10">
-          <v-menu offset-y>
+          <v-menu open-on-hover offset-y>
             <template v-slot:activator="{ on, attrs }">
               <v-btn class="font-weight-bold" rounded v-bind="attrs" dark depressed v-on="on"
                 ><v-icon left>mdi-form-select</v-icon>
@@ -58,7 +58,7 @@
               <v-btn
                 v-if="draft > 1"
                 outlined
-                class="mt-2 mb-1"
+                class="draft-button mt-2 mb-1"
                 width="100%"
                 small
                 depressed
