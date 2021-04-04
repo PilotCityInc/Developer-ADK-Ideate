@@ -60,6 +60,7 @@
                 outlined
                 class="mt-2 mb-1"
                 width="100%"
+                small
                 depressed
                 rounded
                 @click="showDraft(draft)"
