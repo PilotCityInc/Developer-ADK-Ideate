@@ -51,7 +51,7 @@
             <template v-slot:activator="{ on, attrs }">
               <v-btn class="font-weight-bold" rounded v-bind="attrs" dark depressed v-on="on"
                 ><v-icon left>mdi-form-select</v-icon>
-                {{ finalDraftSaved + ' # ' + display }}
+                {{ finalDraftSaved + ' #' + display }}
               </v-btn>
             </template>
             <v-card v-for="draft in adkData.valueDrafts.length" :key="draft" class="module__menu">
@@ -64,8 +64,7 @@
                 rounded
                 @click="showDraft(draft)"
               >
-                <v-icon left> mdi-form-select </v-icon>
-                Draft # {{ adkData.valueDrafts.length - draft }}
+                Draft #{{ adkData.valueDrafts.length - draft }}
               </v-btn>
               <!-- <v-card v-if="indexNum" class="mx-auto" max-width="344" outlined>
                 <v-list-item three-line>
