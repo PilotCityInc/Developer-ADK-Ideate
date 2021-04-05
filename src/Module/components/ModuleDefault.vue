@@ -57,9 +57,9 @@
             <v-card v-for="draft in adkData.valueDrafts.length" :key="draft" class="module__menu">
               <v-btn
                 outlined
+                small
                 class="draft-button mt-2 mb-1"
                 width="100%"
-                small
                 depressed
                 rounded
                 @click="showDraft(draft)"
@@ -200,10 +200,10 @@
         </validation-provider>
         <br />
         <div class="d-flex flex-row">
-          <div>
+          <div class="d-flex justify-start">
             <v-btn
               v-if="disabledPastDraft == 0"
-              :disabled="readonly"
+              :disabled="readonly || unmakeFD == 1"
               rounded
               x-large
               outlined
@@ -230,11 +230,13 @@
           >
             Error saving draft. Maybe duplicate data or other reason!
           </v-alert> -->
-          <div class="ml-auto">
+          <div class="d-flex justify-end">
             <v-btn
               v-if="unmakeFD == 0 && adkData.valueDrafts.length > 0"
               :disabled="invalid || readonly"
               x-large
+              dark
+              color="#fec34b"
               rounded
               class="font-weight-bold"
               depressed
@@ -242,18 +244,18 @@
             >
               Make Final Draft
             </v-btn>
-          </div>
-          <div class="ml-auto">
             <v-btn
               v-if="unmakeFD == 1"
               :disabled="invalid || readonly"
               x-large
               rounded
+              dark
+              color="#ea6764"
               class="font-weight-bold"
               depressed
               @click="unmakeFinalDraft"
             >
-              Unmake Final Draft
+              Continue to Edit
             </v-btn>
           </div>
           <!-- <div><v-btn small disabled depressed>Current Version</v-btn></div>
