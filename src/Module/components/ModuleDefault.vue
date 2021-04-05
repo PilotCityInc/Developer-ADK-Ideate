@@ -375,7 +375,7 @@ export default defineComponent({
 
     // console.log(disabledPastDraft.value);
 
-    function draftSave() {
+    async function draftSave() {
       const draftNum = adkData.value.valueDrafts.length - 1;
       const draft = ref({
         problem: problem.value,
@@ -405,8 +405,12 @@ export default defineComponent({
           Swal.fire({
             type: 'success',
             title: 'Draft saved',
-            text: 'Nice, keep it up!'
+            text: 'Nice, keep it up!',
+            showConfirmButton: false,
+            timer: 2500,
+            allowOutsideClick: false
           });
+          await props.teamDoc.update();
           // problem.value = '';
           // solution.value = '';
           // innovation.value = '';
@@ -430,9 +434,13 @@ export default defineComponent({
           // console.log(display.value);
           Swal.fire({
             type: 'success',
-            title: 'Draft saved',
-            text: 'Nice, keep it up!'
+            title: 'Draft saved!',
+            text: 'nice, keep it up!',
+            showConfirmButton: false,
+            timer: 2500,
+            allowOutsideClick: false
           });
+          await props.teamDoc.update();
         } else if (
           problem.value === adkData.value.valueDrafts[draftNum].problem ||
           solution.value === adkData.value.valueDrafts[draftNum].solution ||
@@ -444,14 +452,20 @@ export default defineComponent({
           Swal.fire({
             type: 'error',
             title: 'Oops...',
-            text: 'Make sure you write something new!'
+            text: 'Make sure you write something new!',
+            showConfirmButton: false,
+            timer: 2500,
+            allowOutsideClick: false
           });
         }
       } else {
         Swal.fire({
           type: 'error',
           title: 'Oops...',
-          text: 'You forgot to write something in.'
+          text: 'You forgot to write something in.',
+          showConfirmButton: false,
+          timer: 2500,
+          allowOutsideClick: false
           // footer: 'asd'
         });
       }
@@ -459,7 +473,7 @@ export default defineComponent({
     const indexNum = '';
 
     const finalDraftIndex = ref('');
-    function finalDraft() {
+    async function finalDraft() {
       const draft = ref({
         problem: problem.value,
         solution: solution.value,
@@ -473,7 +487,7 @@ export default defineComponent({
       // console.log('saved final draft');
 
       finalDraftSaved.value = 'Final Draft';
-      display.value = IndexVal.value + 1;
+      display.value = adkData.value.valueDrafts.length - 1;
       disabledPastDraft.value = 1;
       unmakeFD.value = 1;
       // console.log(display.value);
@@ -481,13 +495,15 @@ export default defineComponent({
         type: 'success',
         title: 'Congratulations!',
         text:
-          'You have marked this draft to be your final draft. If you need to make edits press the unmake final draft button.'
+          'You have marked this draft to be your final draft. If you need to make edits press the unmake final draft button.',
+        showConfirmButton: false,
+        timer: 2500,
+        allowOutsideClick: false
       });
-      props.teamDoc.update(() => ({
+      await props.teamDoc.update(() => ({
         isComplete: true,
         adkIndex
       }));
-      // IndexVal.value = adkData.value.valueDrafts.length - 1;
       return props.teamDoc!.update();
     }
 
@@ -530,13 +546,16 @@ export default defineComponent({
     }
 
     function unmakeFinalDraft() {
-      console.log('unmakeFD');
+      // console.log('unmakeFD');
 
       Swal.fire({
         type: 'info',
         title: 'Unmade Final Draft',
         text:
-          'Draft is unmade as final draft. You can now make changes to this draft and continue to make new ones. Remember to mark one as final draft when you are done!'
+          'Draft is unmade as final draft. You can now make changes to this draft and continue to make new ones. Remember to mark one as final draft when you are done!',
+        showConfirmButton: false,
+        timer: 2500,
+        allowOutsideClick: false
         // footer: 'asd'
       });
 
