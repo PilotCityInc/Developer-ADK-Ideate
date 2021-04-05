@@ -56,7 +56,6 @@
             </template>
             <v-card v-for="draft in adkData.valueDrafts.length" :key="draft" class="module__menu">
               <v-btn
-                v-if="draft > 1"
                 outlined
                 class="mt-2 mb-1"
                 width="100%"
@@ -66,7 +65,7 @@
                 @click="showDraft(draft)"
               >
                 <v-icon left> mdi-form-select </v-icon>
-                Draft # {{ adkData.valueDrafts.length + 1 - draft }}
+                Draft # {{ adkData.valueDrafts.length - draft }}
               </v-btn>
               <!-- <v-card v-if="indexNum" class="mx-auto" max-width="344" outlined>
                 <v-list-item three-line>
@@ -133,6 +132,7 @@
             v-model="problem"
             rounded
             auto-grow
+            :disabled="disabledPastDraft == 1"
             :error-messages="errors"
             placeholder="What 'hair on fire' problem or opportunity are you solving for?"
             prepend-inner-icon="mdi-fire"
@@ -149,6 +149,7 @@
           <v-textarea
             v-model="solution"
             rounded
+            :disabled="disabledPastDraft == 1"
             auto-grow
             :error-messages="errors"
             placeholder="What bright idea do you have as a solution?"
@@ -166,6 +167,7 @@
           <v-textarea
             v-model="innovation"
             rounded
+            :disabled="disabledPastDraft == 1"
             auto-grow
             :error-messages="errors"
             placeholder="What unique value does your solution deliver?"
@@ -184,6 +186,7 @@
             v-model="user"
             rounded
             auto-grow
+            :disabled="disabledPastDraft == 1"
             :error-messages="errors"
             placeholder="Identify and describe the user and customer of the solution"
             prepend-inner-icon="mdi-account-group"
@@ -198,7 +201,14 @@
         <br />
         <div class="d-flex flex-row">
           <div>
-            <v-btn :disabled="readonly" rounded x-large outlined depressed @click="draftSave"
+            <v-btn
+              v-if="disabledPastDraft == 0"
+              :disabled="readonly"
+              rounded
+              x-large
+              outlined
+              depressed
+              @click="draftSave"
               >Save Draft</v-btn
             >
           </div>
@@ -222,15 +232,28 @@
           </v-alert> -->
           <div class="ml-auto">
             <v-btn
+              v-if="unmakeFD == 0 && adkData.valueDrafts.length > 0"
               :disabled="invalid || readonly"
               x-large
               rounded
-              dark
               class="font-weight-bold"
               depressed
               @click="finalDraft"
             >
               Make Final Draft
+            </v-btn>
+          </div>
+          <div class="ml-auto">
+            <v-btn
+              v-if="unmakeFD == 1"
+              :disabled="invalid || readonly"
+              x-large
+              rounded
+              class="font-weight-bold"
+              depressed
+              @click="unmakeFinalDraft"
+            >
+              Unmake Final Draft
             </v-btn>
           </div>
           <!-- <div><v-btn small disabled depressed>Current Version</v-btn></div>
@@ -297,7 +320,7 @@ export default defineComponent({
       valueDrafts: []
     };
 
-    const { adkData, adkIndex } = getModAdk(
+    const { adkData: teamAdkData, adkIndex } = getModAdk(
       props,
       ctx.emit,
       'Ideate',
@@ -305,16 +328,52 @@ export default defineComponent({
       'teamDoc',
       'inputTeamDoc'
     );
+    const adkData = ref(teamAdkData.value);
 
-    const IndexVal = ref(adkData.value.valueDrafts.length - 1);
-    const display = ref(IndexVal.value);
-    const finalDraftSaved = ref('Draft');
-    // const success = ref();
+    if (programDoc.value.data.adks[index].maxCharacters === undefined) {
+      const initIdeatePresets = {
+        maxCharacters: '280',
+        defaultActivity: {
+          groupActivity: 'Screening',
+          requiredActivity: 'Yes',
+          deliverableActivity: 'No',
+          endEarlyActivity: 'Yes',
+          required: false
+        }
+      };
+      programDoc.value.data.adks[index] = {
+        ...initIdeatePresets,
+        ...programDoc.value.data.adks[index]
+      };
+    }
 
+    const disabledPastDraft = ref(0);
+    const IndexVal = ref(adkData.value.valueDrafts.length);
     const problem = ref('');
     const solution = ref('');
     const innovation = ref('');
     const user = ref('');
+    const finalDraftSaved = ref('Draft');
+
+    const unmakeFD = ref(0);
+
+    if (adkData.value.valueDrafts.length > 0) {
+      problem.value = adkData.value.valueDrafts[IndexVal.value - 1].problem;
+      solution.value = adkData.value.valueDrafts[IndexVal.value - 1].solution;
+      innovation.value = adkData.value.valueDrafts[IndexVal.value - 1].innovation;
+      user.value = adkData.value.valueDrafts[IndexVal.value - 1].user;
+      if (adkData.value.valueDrafts[IndexVal.value - 1].finalDraft === true) {
+        disabledPastDraft.value = 1;
+        unmakeFD.value = 1;
+        finalDraftSaved.value = 'Final';
+      }
+    }
+
+    const display = ref(IndexVal.value);
+
+    // const success = ref();
+
+    // console.log(disabledPastDraft.value);
 
     function draftSave() {
       const draftNum = adkData.value.valueDrafts.length - 1;
@@ -323,8 +382,8 @@ export default defineComponent({
         solution: solution.value,
         innovation: innovation.value,
         user: user.value,
-        finalDraft: false,
-        draftIndex: IndexVal.value + 1
+        finalDraft: false
+        // draftIndex: IndexVal.value + 1
         // index: ''
       });
       if (
@@ -333,32 +392,32 @@ export default defineComponent({
         innovation.value.length !== 0 ||
         user.value.length !== 0
       ) {
-        if (adkData.value.valueDrafts.length - 1 <= 0) {
+        if (adkData.value.valueDrafts.length - 1 < 0) {
           adkData.value.valueDrafts.push(draft.value);
           // console.log('draft saved, first draft');
           // console.log(adkData.value.valueDrafts);
           // eslint-disable-next-line no-plusplus
           IndexVal.value++;
           // eslint-disable-next-line no-plusplus
-          display.value++;
-          console.log(display.value);
+          // display.value++;
+          // console.log(display.value);
           // success.value = true;
           Swal.fire({
             type: 'success',
             title: 'Draft saved',
-            text: ''
+            text: 'Nice, keep it up!'
           });
           // problem.value = '';
           // solution.value = '';
           // innovation.value = '';
           // user.value = '';
-        } else if (adkData.value.valueDrafts.length - IndexVal.value === 2) {
-          console.log('first item');
+          // } else if (adkData.value.valueDrafts.length - IndexVal.value === 2) {
+          //   console.log('first item');
         } else if (
-          problem.value !== adkData.value.valueDrafts[draftNum - 1].problem ||
-          solution.value !== adkData.value.valueDrafts[draftNum - 1].solution ||
-          innovation.value !== adkData.value.valueDrafts[draftNum - 1].innovation ||
-          user.value !== adkData.value.valueDrafts[draftNum - 1].user
+          problem.value !== adkData.value.valueDrafts[draftNum].problem ||
+          solution.value !== adkData.value.valueDrafts[draftNum].solution ||
+          innovation.value !== adkData.value.valueDrafts[draftNum].innovation ||
+          user.value !== adkData.value.valueDrafts[draftNum].user
         ) {
           adkData.value.valueDrafts.push(draft.value);
           // console.log('draft saved');
@@ -368,26 +427,31 @@ export default defineComponent({
           IndexVal.value++;
           // eslint-disable-next-line no-plusplus
           display.value++;
-          console.log(display.value);
-          Swal.fire({
-            type: 'success',
-            title: 'Final draft saved',
-            text: ''
-          });
-        } else {
-          // console.log('duplicate data');
-          // success = false;
+          // console.log(display.value);
           Swal.fire({
             type: 'success',
             title: 'Draft saved',
-            text: ''
+            text: 'Nice, keep it up!'
+          });
+        } else if (
+          problem.value === adkData.value.valueDrafts[draftNum].problem ||
+          solution.value === adkData.value.valueDrafts[draftNum].solution ||
+          innovation.value === adkData.value.valueDrafts[draftNum].innovation ||
+          user.value === adkData.value.valueDrafts[draftNum].user
+        ) {
+          // console.log('duplicate data');
+          // success = false;
+          Swal.fire({
+            type: 'error',
+            title: 'Oops...',
+            text: 'Make sure you write something new!'
           });
         }
       } else {
         Swal.fire({
           type: 'error',
           title: 'Oops...',
-          text: 'You forgot to write something in!'
+          text: 'You forgot to write something in.'
           // footer: 'asd'
         });
       }
@@ -396,38 +460,39 @@ export default defineComponent({
 
     const finalDraftIndex = ref('');
     function finalDraft() {
+      const draft = ref({
+        problem: problem.value,
+        solution: solution.value,
+        innovation: innovation.value,
+        user: user.value,
+        finalDraft: true
+        // draftIndex: IndexVal.value + 1
+        // index: ''
+      });
+      adkData.value.valueDrafts.push(draft.value);
       // console.log('saved final draft');
 
-      // console.log(adkData.value.valueDrafts[IndexVal.value].finalDraft);
-      // const submittedFinal = true;
-      adkData.value.valueDrafts[IndexVal.value].draftIndex = IndexVal.value;
-      // console.log(adkData.value.valueDrafts[IndexVal.value].draftIndex);
-      adkData.value.valueDrafts.splice(
-        adkData.value.valueDrafts.length - 1,
-        0,
-        adkData.value.valueDrafts[IndexVal.value]
-      );
-      adkData.value.valueDrafts[adkData.value.valueDrafts.length - 1].finalDraft = true;
-      // console.log(adkData.value.valueDrafts[adkData.value.valueDrafts.length - 1].finalDraft);
-      // adkData.value.valueDrafts.push(draft.value);
-      // console.log(adkData.value.valueDrafts);
       finalDraftSaved.value = 'Final Draft';
       display.value = IndexVal.value + 1;
-      console.log(display.value);
+      disabledPastDraft.value = 1;
+      unmakeFD.value = 1;
+      // console.log(display.value);
       Swal.fire({
         type: 'success',
-        title: 'Final draft saved',
-        text: ''
+        title: 'Congratulations!',
+        text:
+          'You have marked this draft to be your final draft. If you need to make edits press the unmake final draft button.'
       });
       props.teamDoc.update(() => ({
         isComplete: true,
         adkIndex
       }));
       // IndexVal.value = adkData.value.valueDrafts.length - 1;
+      return props.teamDoc!.update();
     }
 
     function showDraft(draft: number) {
-      // console.log(draft - 1);
+      // console.log(draft);
       // IndexVal.value = draftIndex;
       // if (IndexVal.value !== draftIndex) {
       //   return draftIndex;
@@ -436,17 +501,55 @@ export default defineComponent({
       // console.log(adkData.value.valueDrafts[draftIndex - 1].innovation);
       // eslint-disable-next-line operator-assignment
       IndexVal.value = adkData.value.valueDrafts.length - draft;
-      display.value = IndexVal.value + 1;
+      display.value = IndexVal.value;
+      problem.value = adkData.value.valueDrafts[IndexVal.value].problem;
+      solution.value = adkData.value.valueDrafts[IndexVal.value].solution;
+      innovation.value = adkData.value.valueDrafts[IndexVal.value].innovation;
+      user.value = adkData.value.valueDrafts[IndexVal.value].user;
       // console.log(IndexVal.value);
-      // console.log(adkData.value.valueDrafts[IndexVal.value].finalDraft);
-      if (adkData.value.valueDrafts[IndexVal.value + 1].finalDraft === true) {
+      console.log(adkData.value.valueDrafts[IndexVal.value].finalDraft);
+      if (adkData.value.valueDrafts.length - draft !== adkData.value.valueDrafts.length - 1) {
+        disabledPastDraft.value = 1;
+
+        // console.log(disabledPastDraft.value);
+      } else {
+        disabledPastDraft.value = 0;
+        // console.log(disabledPastDraft.value);
+      }
+      if (adkData.value.valueDrafts[IndexVal.value].finalDraft === true) {
         finalDraftSaved.value = 'Final Draft';
+        unmakeFD.value = 1;
+        disabledPastDraft.value = 1;
         // console.log('this is a final draft');
       } else {
         finalDraftSaved.value = 'Draft';
+        // unmakeFD.value = 0;
       }
 
       return draft;
+    }
+
+    function unmakeFinalDraft() {
+      console.log('unmakeFD');
+
+      Swal.fire({
+        type: 'info',
+        title: 'Unmade Final Draft',
+        text:
+          'Draft is unmade as final draft. You can now make changes to this draft and continue to make new ones. Remember to mark one as final draft when you are done!'
+        // footer: 'asd'
+      });
+
+      adkData.value.valueDrafts[adkData.value.valueDrafts.length - 1].finalDraft = false;
+      unmakeFD.value = 0;
+      disabledPastDraft.value = 0;
+      finalDraftSaved.value = 'Draft';
+
+      props.teamDoc.update(() => ({
+        isComplete: false,
+        adkIndex
+      }));
+      return props.teamDoc!.update();
     }
 
     const setupInstructions = ref({
@@ -473,7 +576,10 @@ export default defineComponent({
       innovation,
       user,
       programDoc,
-      index
+      index,
+      disabledPastDraft,
+      unmakeFD,
+      unmakeFinalDraft
     };
   }
 });
