@@ -203,60 +203,58 @@
           <div class="d-flex justify-start mr-auto">
             <v-btn
               v-if="disabledPastDraft == 0"
-              :disabled="readonly || unmakeFD == 1"
+              :disabled="readonly || unmakeFD == 1 || loading"
               rounded
               x-large
               outlined
               depressed
+              :loading="loading"
               @click="draftSave"
               >Save Draft</v-btn
             >
           </div>
-          <!-- <v-alert
-            v-if="success == true"
-            type="success"
-            dismissible
-            border="left"
-            close-text="Close Alert"
+          <v-alert :value="success == true" type="success" border="left" dismissible
+            >Success! Draft saved, keep it up!</v-alert
           >
-            Draft saved!
-          </v-alert>
-          <v-alert
-            v-if="success == false"
-            type="error"
-            dismissible
-            border="left"
-            close-text="Close Alert"
+          <v-alert :value="errorMsg == true" type="error" border="left" dismissible
+            >Error! Draft could not be saved. Make sure all fields are filled out and are
+            updated</v-alert
           >
-            Error saving draft. Maybe duplicate data or other reason!
-          </v-alert> -->
+
           <div class="d-flex justify-end ml-auto">
             <v-btn
               v-if="unmakeFD == 0 && adkData.valueDrafts.length > 0"
-              :disabled="invalid || readonly"
+              :disabled="invalid || readonly || loading"
               x-large
-              dark
               color="#fec34b"
               rounded
               class="font-weight-bold"
               depressed
+              :loading="loading"
               @click="finalDraft"
             >
               Make Final Draft
             </v-btn>
+            <v-alert :value="finalDraftMsg == true" type="success" border="left" dismissible
+              >Success! Marked as final draft</v-alert
+            >
             <v-btn
               v-if="unmakeFD == 1"
-              :disabled="invalid || readonly"
+              :disabled="invalid || readonly || loading"
               x-large
               rounded
-              dark
               color="#ea6764"
               class="font-weight-bold"
               depressed
+              :loading="loading"
               @click="unmakeFinalDraft"
             >
               Continue to Edit
             </v-btn>
+            <v-alert :value="unmakeFDMsg == true" type="warning" border="left" dismissible
+              >Draft is unmade as final draft. You can now make changes to this draft and continue
+              to make new ones. Remember to mark one as final draft when you are done!</v-alert
+            >
           </div>
           <!-- <div><v-btn small disabled depressed>Current Version</v-btn></div>
         <div><v-btn small outlined depressed>Version 4</v-btn></div>
@@ -275,7 +273,7 @@
 <script lang="ts">
 import { defineComponent, PropType, ref, computed } from '@vue/composition-api';
 import { getModAdk } from 'pcv4lib/src';
-import Swal from 'sweetalert2';
+// import Swal from 'sweetalert2';
 import Instruct from './ModuleInstruct.vue';
 import MongoDoc from '../types';
 
@@ -356,6 +354,7 @@ export default defineComponent({
     const innovation = ref('');
     const user = ref('');
     const finalDraftSaved = ref('Draft');
+    const loading = ref(false);
 
     const unmakeFD = ref(0);
 
@@ -373,11 +372,17 @@ export default defineComponent({
 
     const display = ref(IndexVal.value);
 
-    // const success = ref();
+    const success = ref(false);
+    const errorMsg = ref(false);
+    const finalDraftMsg = ref(false);
+    const unmakeFDMsg = ref(false);
 
     // console.log(disabledPastDraft.value);
 
     async function draftSave() {
+      loading.value = true;
+      success.value = false;
+      errorMsg.value = false;
       const draftNum = adkData.value.valueDrafts.length - 1;
       const draft = ref({
         problem: problem.value,
@@ -404,15 +409,18 @@ export default defineComponent({
           // display.value++;
           // console.log(display.value);
           // success.value = true;
-          Swal.fire({
-            type: 'success',
-            title: 'Draft saved',
-            text: 'Nice, keep it up!',
-            showConfirmButton: false,
-            timer: 2500,
-            allowOutsideClick: false
-          });
+          // Swal.fire({
+          //   type: 'success',
+          //   title: 'Draft saved',
+          //   text: 'Nice, keep it up!',
+          //   showConfirmButton: false,
+          //   timer: 2500,
+          //   allowOutsideClick: false
+          // });
           await props.teamDoc.update();
+          loading.value = false;
+          success.value = true;
+          // success.value = '';
           // problem.value = '';
           // solution.value = '';
           // innovation.value = '';
@@ -428,54 +436,47 @@ export default defineComponent({
           adkData.value.valueDrafts.push(draft.value);
           // console.log('draft saved');
           // console.log(adkData.value.valueDrafts);
-          // success.value = true;
+
           // eslint-disable-next-line no-plusplus
           IndexVal.value++;
           // eslint-disable-next-line no-plusplus
           display.value++;
           // console.log(display.value);
-          Swal.fire({
-            type: 'success',
-            title: 'Draft saved!',
-            text: 'nice, keep it up!',
-            showConfirmButton: false,
-            timer: 2500,
-            allowOutsideClick: false
-          });
+          // Swal.fire({
+          //   type: 'success',
+          //   title: 'Draft saved!',
+          //   text: 'nice, keep it up!',
+          //   showConfirmButton: false,
+          //   timer: 2500,
+          //   allowOutsideClick: false
+          // });
           await props.teamDoc.update();
-        } else if (
-          problem.value === adkData.value.valueDrafts[draftNum].problem ||
-          solution.value === adkData.value.valueDrafts[draftNum].solution ||
-          innovation.value === adkData.value.valueDrafts[draftNum].innovation ||
-          user.value === adkData.value.valueDrafts[draftNum].user
-        ) {
-          // console.log('duplicate data');
-          // success = false;
-          Swal.fire({
-            type: 'error',
-            title: 'Oops...',
-            text: 'Make sure you write something new!',
-            showConfirmButton: false,
-            timer: 2500,
-            allowOutsideClick: false
-          });
+          success.value = true;
+        } else {
+          errorMsg.value = true;
         }
       } else {
-        Swal.fire({
-          type: 'error',
-          title: 'Oops...',
-          text: 'You forgot to write something in.',
-          showConfirmButton: false,
-          timer: 2500,
-          allowOutsideClick: false
-          // footer: 'asd'
-        });
+        // Swal.fire({
+        //   type: 'error',
+        //   title: 'Oops...',
+        //   text: 'You forgot to write something in.',
+        //   showConfirmButton: false,
+        //   timer: 2500,
+        //   allowOutsideClick: false
+        //   // footer: 'asd'
+        // });
+        errorMsg.value = true;
       }
+      // errorMsg.value = false;
+      // success.value = false;
+      loading.value = false;
     }
     const indexNum = '';
 
     const finalDraftIndex = ref('');
+
     async function finalDraft() {
+      loading.value = true;
       const draft = ref({
         problem: problem.value,
         solution: solution.value,
@@ -493,20 +494,22 @@ export default defineComponent({
       disabledPastDraft.value = 1;
       unmakeFD.value = 1;
       // console.log(display.value);
-      Swal.fire({
-        type: 'success',
-        title: 'Congratulations!',
-        text:
-          'You have marked this draft to be your final draft. If you need to make edits press the unmake final draft button.',
-        showConfirmButton: false,
-        timer: 2500,
-        allowOutsideClick: false
-      });
+      // Swal.fire({
+      //   type: 'success',
+      //   title: 'Congratulations!',
+      //   text:
+      //     'You have marked this draft to be your final draft. If you need to make edits press the unmake final draft button.',
+      //   showConfirmButton: false,
+      //   timer: 2500,
+      //   allowOutsideClick: false
+      // });
       await props.teamDoc.update(() => ({
         isComplete: true,
         adkIndex
       }));
-      return props.teamDoc!.update();
+      props.teamDoc!.update();
+      loading.value = false;
+      finalDraftMsg.value = true;
     }
 
     function showDraft(draft: number) {
@@ -548,18 +551,19 @@ export default defineComponent({
     }
 
     function unmakeFinalDraft() {
+      loading.value = true;
       // console.log('unmakeFD');
 
-      Swal.fire({
-        type: 'info',
-        title: 'Unmade Final Draft',
-        text:
-          'Draft is unmade as final draft. You can now make changes to this draft and continue to make new ones. Remember to mark one as final draft when you are done!',
-        showConfirmButton: false,
-        timer: 2500,
-        allowOutsideClick: false
-        // footer: 'asd'
-      });
+      // Swal.fire({
+      //   type: 'info',
+      //   title: 'Unmade Final Draft',
+      //   text:
+      //     'Draft is unmade as final draft. You can now make changes to this draft and continue to make new ones. Remember to mark one as final draft when you are done!',
+      //   showConfirmButton: false,
+      //   timer: 2500,
+      //   allowOutsideClick: false
+      //   // footer: 'asd'
+      // });
 
       adkData.value.valueDrafts[adkData.value.valueDrafts.length - 1].finalDraft = false;
       unmakeFD.value = 0;
@@ -570,7 +574,9 @@ export default defineComponent({
         isComplete: false,
         adkIndex
       }));
-      return props.teamDoc!.update();
+      props.teamDoc!.update();
+      loading.value = false;
+      unmakeFDMsg.value = true;
     }
 
     const setupInstructions = ref({
@@ -591,7 +597,7 @@ export default defineComponent({
       finalDraftIndex,
       display,
       adkData,
-      // success,
+      success,
       problem,
       solution,
       innovation,
@@ -600,7 +606,11 @@ export default defineComponent({
       index,
       disabledPastDraft,
       unmakeFD,
-      unmakeFinalDraft
+      unmakeFinalDraft,
+      loading,
+      errorMsg,
+      finalDraftMsg,
+      unmakeFDMsg
     };
   }
 });
