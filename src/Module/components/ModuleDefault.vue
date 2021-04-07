@@ -64,7 +64,6 @@
                 rounded
                 @click="showDraft(draft)"
               >
-                <v-icon left> mdi-form-select </v-icon>
                 Draft # {{ adkData.valueDrafts.length - draft }}
               </v-btn>
               <!-- <v-card v-if="indexNum" class="mx-auto" max-width="344" outlined>
@@ -199,7 +198,7 @@
           ></v-textarea>
         </validation-provider>
         <br />
-        <div class="d-flex flex-row">
+        <div class="d-flex flex-row mb-3">
           <div class="d-flex justify-start mr-auto">
             <v-btn
               v-if="disabledPastDraft == 0"
@@ -210,16 +209,17 @@
               depressed
               :loading="loading"
               @click="draftSave"
-              >Save Draft</v-btn
-            >
+              ><v-icon v-if="success == true" left color="green" :value="success == true"
+                >mdi-check-bold</v-icon
+              >
+
+              <v-icon v-if="errorMsg == true" left color="red" :value="errorMsg == true"
+                >mdi-close-thick</v-icon
+              >
+
+              Save Draft
+            </v-btn>
           </div>
-          <v-alert :value="success == true" type="success" border="left" dismissible
-            >Success! Draft saved, keep it up!</v-alert
-          >
-          <v-alert :value="errorMsg == true" type="error" border="left" dismissible
-            >Error! Draft could not be saved. Make sure all fields are filled out and are
-            updated</v-alert
-          >
 
           <div class="d-flex justify-end ml-auto">
             <v-btn
@@ -228,40 +228,48 @@
               x-large
               color="#fec34b"
               rounded
-              class="font-weight-bold"
+              class="font-weight-bold white--text"
               depressed
               :loading="loading"
               @click="finalDraft"
             >
               Make Final Draft
             </v-btn>
-            <v-alert :value="finalDraftMsg == true" type="success" border="left" dismissible
-              >Success! Marked as final draft</v-alert
-            >
             <v-btn
               v-if="unmakeFD == 1"
               :disabled="invalid || readonly || loading"
               x-large
               rounded
               color="#ea6764"
-              class="font-weight-bold"
+              class="font-weight-bold white--text"
               depressed
               :loading="loading"
               @click="unmakeFinalDraft"
-            >
+              ><v-icon
+                v-if="finalDraftMsg == true"
+                color="white"
+                left
+                :value="finalDraftMsg == true"
+                >mdi-lead-pencil</v-icon
+              >
               Continue to Edit
             </v-btn>
-            <v-alert :value="unmakeFDMsg == true" type="warning" border="left" dismissible
-              >Draft is unmade as final draft. You can now make changes to this draft and continue
-              to make new ones. Remember to mark one as final draft when you are done!</v-alert
-            >
           </div>
           <!-- <div><v-btn small disabled depressed>Current Version</v-btn></div>
-        <div><v-btn small outlined depressed>Version 4</v-btn></div>
-        <div><v-btn small outlined depressed>Version 3</v-btn></div>
-        <div><v-btn small outlined depressed>Version 2</v-btn></div>
-        <div><v-btn small outlined depressed>Version 1</v-btn></div> -->
+          <div><v-btn small outlined depressed>Version 4</v-btn></div>
+          <div><v-btn small outlined depressed>Version 3</v-btn></div>
+          <div><v-btn small outlined depressed>Version 2</v-btn></div>
+          <div><v-btn small outlined depressed>Version 1</v-btn></div> -->
         </div>
+        <!-- <v-alert dense :value="unmakeFDMsg == true" type="warning"
+          >You are free to continue to edit. Mark as final draft when done.</v-alert
+        > -->
+        <!-- <v-alert dense :value="finalDraftMsg == true" type="success"
+          >Final draft has been saved.</v-alert
+        > -->
+        <!-- <v-alert dense :value="errorMsg == true" type="error">Draft not saved. Try again.</v-alert> -->
+        <!-- <v-alert dense :value="success == true" type="success">Draft saved</v-alert> -->
+
         <!-- ENTER CONTENT HERE -->
         <!-- DESIGN YOUR ACTIVITY HERE / COMMENT OUT WHEN YOU'VE STARTED DESIGNING -->
         <!-- <div class="module-default__none">Design your activity here</div> -->
