@@ -578,10 +578,10 @@ export default defineComponent({
       disabledPastDraft.value = 0;
       finalDraftSaved.value = 'Draft';
 
-      props.teamDoc.update(() => ({
-        isComplete: false,
-        adkIndex
-      }));
+      // props.teamDoc.update(() => ({
+      //   isComplete: false,
+      //   adkIndex
+      // }));
       props.teamDoc!.update();
       loading.value = false;
       unmakeFDMsg.value = true;
