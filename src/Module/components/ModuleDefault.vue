@@ -245,13 +245,7 @@
               depressed
               :loading="loading"
               @click="unmakeFinalDraft"
-              ><v-icon
-                v-if="finalDraftMsg == true"
-                color="white"
-                left
-                :value="finalDraftMsg == true"
-                >mdi-lead-pencil</v-icon
-              >
+              ><v-icon color="white" left>mdi-lead-pencil</v-icon>
               Continue to Edit
             </v-btn>
           </div>
