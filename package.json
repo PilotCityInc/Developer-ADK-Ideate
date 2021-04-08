@@ -3,7 +3,11 @@
   "license": "MIT",
   "main": "/dist/index.ts",
   "name": "developer-adk-ideate",
+<<<<<<< HEAD
   "version": "1.0.40",
+=======
+  "version": "1.0.39",
+>>>>>>> d13318719b424131f5f0d264da716fc7c0d5ece5
   "description": "PilotCity Development Kit Template for creating your own Program Activities",
   "repository": {
     "type": "git",
