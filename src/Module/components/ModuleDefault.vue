@@ -630,7 +630,6 @@ export default defineComponent({
 .v-menu__content {
   box-shadow: none;
 }
-
 .module-default {
   &__row {
     flex-direction: row;
