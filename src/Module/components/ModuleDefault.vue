@@ -51,7 +51,7 @@
             <template v-slot:activator="{ on, attrs }">
               <v-btn class="font-weight-bold" rounded v-bind="attrs" dark depressed v-on="on"
                 ><v-icon left>mdi-form-select</v-icon>
-                {{ finalDraftSaved + ' # ' + display }}
+                {{ finalDraftSaved + ' #' + display }}
               </v-btn>
             </template>
             <v-card v-for="draft in adkData.valueDrafts.length" :key="draft" class="module__menu">
@@ -374,7 +374,7 @@ export default defineComponent({
       if (adkData.value.valueDrafts[IndexVal.value - 1].finalDraft === true) {
         disabledPastDraft.value = 1;
         unmakeFD.value = 1;
-        finalDraftSaved.value = 'Final';
+        finalDraftSaved.value = 'Final Draft';
       }
     }
 
@@ -557,7 +557,6 @@ export default defineComponent({
 
       return draft;
     }
-
     function unmakeFinalDraft() {
       loading.value = true;
       // console.log('unmakeFD');
