@@ -515,7 +515,7 @@ export default defineComponent({
         isComplete: true,
         adkIndex
       }));
-      props.teamDoc!.update();
+      // await props.teamDoc!.update();
       loading.value = false;
       finalDraftMsg.value = true;
     }
@@ -557,7 +557,16 @@ export default defineComponent({
 
       return draft;
     }
-    function unmakeFinalDraft() {
+    // watch: {
+    //   loader () {
+    //     const l = this.loader
+    //     this[l] = !this[l]
+
+    //     setTimeout(() => (this[l] = false), 3000)
+
+    //     this.loader = null
+
+    async function unmakeFinalDraft() {
       loading.value = true;
       // console.log('unmakeFD');
 
@@ -581,7 +590,7 @@ export default defineComponent({
       //   isComplete: false,
       //   adkIndex
       // }));
-      props.teamDoc!.update();
+      await props.teamDoc!.update();
       loading.value = false;
       unmakeFDMsg.value = true;
     }
@@ -630,6 +639,7 @@ export default defineComponent({
 .v-menu__content {
   box-shadow: none;
 }
+
 .module-default {
   &__row {
     flex-direction: row;
