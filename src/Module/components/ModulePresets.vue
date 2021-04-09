@@ -21,7 +21,7 @@
           <div center class="module-setup__save-button">
             <v-btn
               center
-              class="mt-6"
+              class="mt-8"
               x-large
               rounded
               outlined
