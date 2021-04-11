@@ -230,6 +230,8 @@ export default defineComponent({
   &__alert {
     text-align: center;
     width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
   }
   &__question-title {
     font-family: Raleway;
