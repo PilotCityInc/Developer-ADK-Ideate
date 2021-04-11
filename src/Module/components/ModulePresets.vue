@@ -213,7 +213,7 @@ export default defineComponent({
 
     return {
       programDoc,
-      ...loading(save, 'Success', 'Try again'),
+      ...loading(save, 'Success', 'Try again later'),
       ...toRefs(presets),
       setupInstructions,
       index,
