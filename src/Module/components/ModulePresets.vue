@@ -31,9 +31,13 @@
               >Save</v-btn
             >
           </div>
-          <v-alert v-if="success || error" dense class="mt-3" :color="success ? 'green' : 'red'">{{
-            message
-          }}</v-alert>
+          <v-alert
+            v-if="success || error"
+            dense
+            class="mt-3 white--text presets__alert"
+            :color="success ? 'green' : 'red'"
+            >{{ message }}</v-alert
+          >
         </validation-provider>
         <!-- <div class="presets__nopresets">No tweaking necessary</div> -->
         <!-- <v-divider class="presets__divider"></v-divider>
@@ -209,7 +213,7 @@ export default defineComponent({
 
     return {
       programDoc,
-      ...loading(save, 'Saved Successfully', 'Could not save at this time'),
+      ...loading(save, 'Success', 'Try again'),
       ...toRefs(presets),
       setupInstructions,
       index,
@@ -223,6 +227,10 @@ export default defineComponent({
 
 <style lang="scss">
 .presets {
+  &__alert {
+    text-align: center;
+    width: fit-content;
+  }
   &__question-title {
     font-family: Raleway;
     font-size: 18px;
