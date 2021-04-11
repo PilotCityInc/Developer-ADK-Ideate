@@ -31,7 +31,7 @@
               >Save</v-btn
             >
           </div>
-          <v-alert v-if="success || error" class="mt-3" :type="success ? 'success' : 'error'">{{
+          <v-alert v-if="success || error" dense class="mt-3" :color="success ? 'green' : 'red'">{{
             message
           }}</v-alert>
         </validation-provider>
