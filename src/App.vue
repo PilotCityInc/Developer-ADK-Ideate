@@ -11,7 +11,6 @@
 </template>
 
 <script lang="ts">
-// import ApolloExample from './components/ApolloExample.vue';
 import { defineComponent, Ref, ref } from '@vue/composition-api';
 import { ObjectId } from 'bson';
 import Module from './Module/Module.vue';
